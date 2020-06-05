@@ -1,17 +1,26 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <HelloWorld :msg="title"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from '@/components/HelloWorld.vue'
+import { fetchXLSXDataMixin } from "@/mixins/fetchXLSXDataMixin";
 
 export default {
   name: 'App',
   components: {
     HelloWorld
+  },
+  mixins: [fetchXLSXDataMixin],
+  data() {
+    return {
+      title: "Dashboard App"
+    };
+  },
+  mounted() {
+    this.fetchData();
   }
 }
 </script>
