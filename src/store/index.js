@@ -32,14 +32,15 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async fetchData(/*{commit, state}*/) {
+    async fetchData({commit,/* state*/}) {
       const workBook = await fetchData(DATA_URL);
-      // const accountingSections = workBook.SheetNames
-      //   /*
-      //   *   Drop data update time
-      //   * */
-      //   .slice(0, workBook.SheetNames.length - 1);
-      // commit('setAccountingSections', accountingSections);
+      const accountingSections = workBook.SheetNames
+        /*
+        *   Drop data update time
+        * */
+        .slice(0, workBook.SheetNames.length - 1);
+
+      commit('setAccountingSections', accountingSections);
 
       const [
         buildingsSheetName,
@@ -55,11 +56,11 @@ export default new Vuex.Store({
 
       console.log(buildingsSheet, landsSheet, transportSheet, updateTimeSheet);
 
-      const buildings = new Records(buildingsSheet);
-      // const lands = new Records(landsSheet);
+      // const buildings = new Records(buildingsSheet);
+      const lands = new Records(landsSheet);
 
       // console.log(lands.getDistricts());
-      console.log(buildings);
+      console.log(lands);
     }
   }
 });

@@ -44,48 +44,50 @@
             }],
             yAxes: [{
               stacked: true,
-              // display: false
+              display: false
             }]
           },
           animation: {
             duration: 450
+          },
+          plugins: {
+            datalabels: {
+              color: 'white',
+              textAlign: 'center',
+              font: {
+                weight: "bold",
+                size: 14
+              }
+            }
           }
         }
       };
     },
     computed: {
-      ...mapGetters(['months'])
+      ...mapGetters(['months', 'accountingSections'])
     },
     methods: {
       ...mapActions(['fetchData']),
       setupChart() {
         this.chartData = {
           labels: this.months,
-          datasets: [
-            {
-              label: "Bad Style",
+          datasets: [{
               data: [40, 47, 44, 38, 27],
               backgroundColor: COLORS.blue,
-              // borderColor: COLORS.red,
-              // hoverBackgroundColor: "#7E57C2",
-              // hoverBorderWidth: 0
             },
             {
-              label: "Warning",
-              data: [10, 12, 7, 5, 4],
+              data: [10, 12, 7, 5, 1],
               backgroundColor: COLORS.green,
-              // hoverBackgroundColor: "#FFCA28",
-              // hoverBorderWidth: 0
             },
             {
-              label: "Error",
               data: [17, 11, 22, 18, 12],
               backgroundColor: COLORS.grey,
-              // hoverBackgroundColor: "#EF5350",
-              // hoverBorderWidth: 0
-            }
-          ],
+            }],
         };
+
+        for (let i = 0; i < this.accountingSections.length; i++) {
+          this.chartData.datasets[i].label = this.accountingSections[i];
+        }
       }
     },
     async mounted() {
