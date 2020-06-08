@@ -1,13 +1,14 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {DATA_URL} from "@/configs";
-import {fetchData} from "@/utils/dataSet";
-import {Records} from "@/models/Records";
+import { DATA_URL } from "@/configs";
+import { fetchData, getFilteredSheetNames } from "@/utils/dataSet";
+import { mergeRecords, Records } from "@/models/Records";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    records: [],
     titles: [],
     /*
     *   filters
@@ -16,7 +17,6 @@ export default new Vuex.Store({
     institutions: [],
     accountingSections: [],
     years: [],
-    months: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
   },
   getters: {
     titles({titles}) { return titles; },
@@ -34,13 +34,8 @@ export default new Vuex.Store({
   actions: {
     async fetchData({commit,/* state*/}) {
       const workBook = await fetchData(DATA_URL);
-      const accountingSections = workBook.SheetNames
-        /*
-        *   Drop data update time
-        * */
-        .slice(0, workBook.SheetNames.length - 1);
 
-      commit('setAccountingSections', accountingSections);
+      commit('setAccountingSections', getFilteredSheetNames(workBook));
 
       const [
         buildingsSheetName,
@@ -52,15 +47,30 @@ export default new Vuex.Store({
       const buildingsSheet = workBook.Sheets[buildingsSheetName];
       const landsSheet = workBook.Sheets[landsSheetName];
       const transportSheet = workBook.Sheets[transportSheetName];
+      // eslint-disable-next-line no-unused-vars
       const updateTimeSheet = workBook.Sheets[updateTimeSheetName];
 
-      console.log(buildingsSheet, landsSheet, transportSheet, updateTimeSheet);
+      // console.log(buildingsSheet, landsSheet, transportSheet, updateTimeSheet);
 
-      // const buildings = new Records(buildingsSheet);
+      // eslint-disable-next-line no-unused-vars
+      const buildings = new Records(buildingsSheet);
+      buildings.add({accountingSections: buildingsSheetName});
+
+      const transport = new Records(transportSheet);
+      transport.add({accountingSections: transportSheetName});
+
+      // eslint-disable-next-line no-unused-vars
       const lands = new Records(landsSheet);
+      lands.add({accountingSections: landsSheetName});
 
-      // console.log(lands.getDistricts());
-      console.log(lands);
+      const allRecords = mergeRecords(lands, transport, buildings) ;
+
+      const year2020 = allRecords
+        .filter(r => r.date.getFullYear() > 2019)
+        .filter(r => r.amount < 500)
+        /*.filter(r => r.institution.includes('БУ_РПНИ'))*/;
+
+      console.log(year2020);
     }
   }
 });

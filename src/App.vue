@@ -15,8 +15,8 @@
   // import HelloWorld from '@/charts/HelloWorld.vue'
   import ReactiveBarChart from "@/components/charts/ReactiveBar";
   import store from '@/store';
-  import {mapActions, mapGetters} from 'vuex';
-  import {COLORS} from "@/configs";
+  import { mapActions, mapGetters } from 'vuex';
+  import { COLORS, MONTHS } from "@/configs";
 
   export default {
     name: 'App',
@@ -50,7 +50,7 @@
           animation: {
             duration: 450
           },
-          plugins: {
+          /*plugins: {
             datalabels: {
               color: 'white',
               textAlign: 'center',
@@ -59,7 +59,7 @@
                 size: 14
               }
             }
-          }
+          }*/
         }
       };
     },
@@ -70,9 +70,10 @@
       ...mapActions(['fetchData']),
       setupChart() {
         this.chartData = {
-          labels: this.months,
-          datasets: [{
-              data: [40, 47, 44, 38, 27],
+          labels: MONTHS,
+          datasets: [
+            {
+              data: [130, 47, 44, 38, 27],
               backgroundColor: COLORS.blue,
             },
             {
@@ -81,13 +82,15 @@
             },
             {
               data: [17, 11, 22, 18, 12],
-              backgroundColor: COLORS.grey,
-            }],
+              backgroundColor: COLORS.red,
+            }
+          ],
         };
 
-        for (let i = 0; i < this.accountingSections.length; i++) {
-          this.chartData.datasets[i].label = this.accountingSections[i];
-        }
+        this.accountingSections.forEach((v, i) =>
+          this.chartData.datasets[i].label = v
+        );
+
       }
     },
     async mounted() {
@@ -110,6 +113,7 @@
     color: #2c3e50;
     margin-top: 60px;
   }
+
   .container {
     margin: 0 auto;
     width: 750px;

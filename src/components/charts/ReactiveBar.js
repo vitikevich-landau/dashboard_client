@@ -1,12 +1,12 @@
 import {Bar, mixins} from "vue-chartjs";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+// import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const {reactiveProp} = mixins;
 
 export default {
   extends: Bar,
   mixins: [reactiveProp],
-  plugins: [ChartDataLabels],
+  // plugins: [ChartDataLabels],
   props: ["options"],
   mounted() {
     // this.chartData is created in the mixin.

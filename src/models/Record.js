@@ -1,21 +1,22 @@
 import XLSX from "xlsx";
 
 export class Record {
-  constructor(district, institution, date, accountingSection, amount) {
+  constructor(district, institution, date, serviceType, amount) {
     this.district = district;
     this.institution = institution;
-    this.date = date;
-    this.serviceType = accountingSection;
+    this.date_value = date;
+    this.date = this._toJsDate();
+    this.serviceType = serviceType;
     this.amount = amount;
   }
 
-  getJsDate() {
-    const date = XLSX.SSF.parse_date_code(this.date);
-    return new Date(date.y, date.m - 1, date.d);
+  getHumanDate() {
+    return this._toHumanDate(this._toJsDate());
   }
 
-  getHumanDate() {
-    return this._toHumanDate(this.getJsDate());
+  _toJsDate() {
+    const date = XLSX.SSF.parse_date_code(this.date_value);
+    return new Date(date.y, date.m - 1, date.d);
   }
 
   _toHumanDate(jsDate) {

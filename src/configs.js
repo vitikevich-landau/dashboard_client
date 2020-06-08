@@ -1,5 +1,21 @@
 export const DATA_URL = 'http://localhost:3000/downloads';
 
+export const MONTHS = [
+  'Январь',
+  'Февраль',
+  'Март',
+  'Апрель',
+  'Май',
+  'Июнь',
+  'Июль',
+  'Август',
+  'Сентябрь',
+  'Октябрь',
+  'Ноябрь',
+  'Декабрь',
+
+];
+
 export const COLORS = {
   red: 'rgb(255, 99, 132)',
   orange: 'rgb(255, 159, 64)',
