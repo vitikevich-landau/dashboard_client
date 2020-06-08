@@ -13,6 +13,7 @@ export class Record {
     const date = XLSX.SSF.parse_date_code(this.date);
     return new Date(date.y, date.m - 1, date.d);
   }
+
   getHumanDate() {
     return this._toHumanDate(this.getJsDate());
   }
@@ -22,10 +23,16 @@ export class Record {
       mm = jsDate.getMonth() + 1,
       yyyy = jsDate.getFullYear() % 100;
 
-    if (dd < 10) { dd = '0' + dd; }
-    if (mm < 10) { mm = '0' + mm; }
-    if (yyyy < 10) { yyyy = '0' + yyyy; }
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+    if (yyyy < 10) {
+      yyyy = '0' + yyyy;
+    }
 
-    return `${dd}.${mm}.${yyyy}`;
+    return `${ dd }.${ mm }.${ yyyy }`;
   }
 }
