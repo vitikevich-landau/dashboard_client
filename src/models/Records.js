@@ -1,5 +1,6 @@
 import { getRows, getRowValue } from "@/utils/dataSet";
 import { Record } from "@/models/Record";
+import { MONTHS } from "@/configs";
 
 export const mergeRecords = (...records) => {
   const merged = new Records();
@@ -54,6 +55,10 @@ export class Records {
     return this.records.map(r => r.date);
   }
 
+  years() {
+    return [...new Set(this.dates().map(r => r.getFullYear()))];
+  }
+
   serviceTypes() {
     return this.records.map(r => r.serviceType);
   }
@@ -69,7 +74,6 @@ export class Records {
   groupByYears() {
     const years = [...new Set(this.records.map(r => r.date.getFullYear()))];
     const grouped = toObject(years);
-
     this.forEach(r => grouped[r.date.getFullYear()].push(r));
 
     return grouped;
@@ -77,11 +81,21 @@ export class Records {
 
   groupByMonths() {
     const years = this.groupByYears();
-
     Object.keys(years).forEach(year => {
-      // eslint-disable-next-line no-unused-vars
-      const months = toObject(years[year].map(r => r.date.getMonth()));
-
+      const months = Object.assign(
+        {},
+        /*
+        *   set not used months undefined
+        * */
+        Object.keys(MONTHS)
+          .reduce((acc, k) => {
+            acc[k] = undefined;
+            return acc;
+          }, {}),
+        toObject(
+          years[year].map(r => r.date.getMonth())
+        )
+      );
       years[year].forEach(r => months[r.date.getMonth()].push(r));
       years[year] = months;
     });
