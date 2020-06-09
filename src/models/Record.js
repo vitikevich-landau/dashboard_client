@@ -8,6 +8,7 @@ export class Record {
     this.date = this._toJsDate();
     this.serviceType = serviceType;
     this.amount = amount;
+    this.accountingSection = undefined;
   }
 
   toHumanDate() {
