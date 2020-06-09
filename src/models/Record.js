@@ -10,7 +10,7 @@ export class Record {
     this.amount = amount;
   }
 
-  getHumanDate() {
+  toHumanDate() {
     return this._toHumanDate(this._toJsDate());
   }
 
