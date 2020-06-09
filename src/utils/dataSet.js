@@ -10,7 +10,7 @@ export const fetchData = url =>
     })
     .then(ab => XLSX.read(new Uint8Array(ab), {type: "array"}));
 
-export const getFilteredSheetNames = workBook =>
+export const getNecessarySheetNames = workBook =>
   workBook.SheetNames.slice(0, workBook.SheetNames.length - 1);
 
 const getRowNumber = cell => cell.replace(/\D+/g, '');
@@ -35,5 +35,5 @@ export const getRows = (workSheet, cellMapper = null) => {
     rows[n].push(row);
   }
 
-  return /*rowsToHumanDate*/(rows.filter(r => r));
+  return (rows.filter(r => r));
 };
