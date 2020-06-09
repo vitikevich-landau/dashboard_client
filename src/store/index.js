@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { DATA_URL } from "@/configs";
-import { fetchData, getNecessarySheetNames } from "@/utils/dataSet";
-import { mergeRecords, Records } from "@/models/Records";
+import {DATA_URL} from "@/configs";
+// eslint-disable-next-line no-unused-vars
+import {fetchData, getNecessarySheetNames, gt} from "@/utils/dataSet";
+import {mergeRecords, Records} from "@/models/Records";
 
 // eslint-disable-next-line no-unused-vars
 import _ from 'lodash';
@@ -91,26 +92,35 @@ export default new Vuex.Store({
       // console.log(allRecords.filter(r => institutions.includes(r.institution)));
 
       console.log(
-        // _.groupBy(allRecords.records, r => r.institution)
         _.chain(allRecords.records)
-          // .filter(r => r.accountingSection === landsSheetName)
+          .filter(r => r.accountingSection === landsSheetName)
           .groupBy(r => r.institution)
-          .mapValues(
-            /*
-            *   need rounding
-            * */
-            rs => [
-              rs.reduce((acc, r) => acc + r.amount, 0),
-              [...new Set(rs.map(r => r.district))][0]
+          .mapValues((rs, k) => [
+              k,
+              rs.reduce((acc, r) => _.round(acc + r.amount, 2), 0),
+              rs.map(r => r.toHumanDate()),
+              rs.map(r => r.amount)
             ]
           )
+          .orderBy(r => r[1], ['desc'])
           .value()
-      );
+      )
 
-      // console.log(
-      //   _.merge([1, 2, 5], [2, 31, 2])
-      // );
-
+      // const detalization = _.chain(allRecords.records)
+      //   // .filter(r => r.accountingSection === landsSheetName)
+      //   .groupBy(r => r.institution)
+      //   .mapValues(
+      //     (rs, k) => [
+      //       k,
+      //       rs.reduce((acc, r) => _.round(acc + r.amount, 2), 0),
+      //       [...new Set(rs.map(r => r.district))][0],
+      //     ]
+      //   )
+      //   .map(r => r)
+      //   .value();
+      //
+      //
+      // console.log(detalization);
     }
   }
 });

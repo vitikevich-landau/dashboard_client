@@ -1,4 +1,5 @@
 import XLSX from "xlsx";
+import _ from 'lodash';
 
 export const fetchData = url =>
   fetch(url)
@@ -19,21 +20,18 @@ export const getRowValue = row => row['v'];
 export const getRows = (workSheet, cellMapper = null) => {
   let rows = [], row, n;
 
-  for (const cell in workSheet) {
-    n = getRowNumber(cell);
-
+  _.forEach(workSheet, (v, k) => {
+    n = getRowNumber(k);
     if (!rows[n]) {
       rows[n] = [];
     }
-
     if (cellMapper) {
-      row = cellMapper(workSheet[cell]);
+      row = cellMapper(workSheet[k]);
     } else {
-      row = workSheet[cell];
+      row = workSheet[k];
     }
-
     rows[n].push(row);
-  }
+  });
 
-  return (rows.filter(r => r));
+  return _.compact(rows);
 };

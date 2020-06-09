@@ -1,10 +1,14 @@
-import { getRows, getRowValue } from "@/utils/dataSet";
-import { Record } from "@/models/Record";
-import { MONTHS } from "@/configs";
+import {getRows, getRowValue} from "@/utils/dataSet";
+import {Record} from "@/models/Record";
+import {MONTHS} from "@/configs";
 
 export const mergeRecords = (...records) => {
   const merged = new Records();
-  records.forEach(recs => recs.records.forEach(rec => merged.records.push(rec)));
+  records.forEach(
+    recs => recs.records.forEach(
+      rec => merged.records.push(rec)
+    )
+  );
 
   return merged;
 };
@@ -18,7 +22,7 @@ const toObject = (array) =>
   );
 
 export class Records {
-  constructor(workSheet) {
+  constructor(workSheet, /*options*/) {
     if (workSheet instanceof Array) {
       this.records = workSheet;
     } else {
