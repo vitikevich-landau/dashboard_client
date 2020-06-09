@@ -5,6 +5,11 @@
           :chart-data="chartData"
           :options="chartOptions"
       />
+<!--      <p v-for="(year, i) in records" :key="i">-->
+<!--        {{ Object.keys(year) }}-->
+<!--      </p>-->
+      <h2>{{ years }}</h2>
+      <h2>{{ districts }}</h2>
     </div>
   </div>
 </template>
@@ -64,16 +69,21 @@
       };
     },
     computed: {
-      ...mapGetters(['months', 'accountingSections'])
+      ...mapGetters([
+        'accountingSections',
+        'records',
+        'years',
+        'districts',
+      ])
     },
     methods: {
       ...mapActions(['fetchData']),
       setupChart() {
         this.chartData = {
-          labels: MONTHS,
+          labels: Object.values(MONTHS),
           datasets: [
             {
-              data: [130, 47, 44, 38, 27],
+              data: [130, 47, 44, 38, 27, undefined, 0, 39],
               backgroundColor: COLORS.blue,
             },
             {
@@ -91,6 +101,20 @@
           this.chartData.datasets[i].label = v
         );
 
+        /*
+        *   В зависимости от выбранных годов, создаём компоненты
+        *
+        *
+        * */
+
+        // const years = [2011, 2001];
+        //
+        // console.log(
+        //   this.records
+        //     .filter(rs => years.includes(rs.date.getFullYear()))
+        //     .groupByMonths()
+        // );
+
       }
     },
     async mounted() {
@@ -100,6 +124,8 @@
       await store.dispatch('fetchData');
 
       this.setupChart();
+
+      // console.log(store.getters.records);
     }
   }
 </script>
@@ -116,6 +142,6 @@
 
   .container {
     margin: 0 auto;
-    width: 750px;
+    width: 600px;
   }
 </style>
