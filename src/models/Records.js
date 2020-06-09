@@ -8,6 +8,14 @@ export const mergeRecords = (...records) => {
   return merged;
 };
 
+const toObject = (array) =>
+  array.reduce(
+    (acc, v) => {
+      acc[v] = [];
+      return acc;
+    }, {}
+  );
+
 export class Records {
   constructor(workSheet) {
     if (workSheet instanceof Array) {
@@ -60,28 +68,42 @@ export class Records {
 
   groupByYears() {
     const years = [...new Set(this.records.map(r => r.date.getFullYear()))];
-    const grouped = years
-      .reduce(
-        (acc, v) => {
-          acc[v] = [];
-          return acc;
-        }, {}
-      );
+    const grouped = toObject(years);
 
-    this.records.forEach(r => grouped[r.date.getFullYear()].push(r));
+    this.forEach(r => grouped[r.date.getFullYear()].push(r));
 
     return grouped;
   }
 
+  groupByMonths() {
+    const years = this.groupByYears();
+
+    Object.keys(years).forEach(year => {
+      // eslint-disable-next-line no-unused-vars
+      const months = toObject(years[year].map(r => r.date.getMonth()));
+
+      years[year].forEach(r => months[r.date.getMonth()].push(r));
+      years[year] = months;
+    });
+
+    return years;
+  }
+
   add(options) {
     Object.keys(options).forEach(key => {
-      this.records.forEach(r => r[key] = options[key]);
+      this.forEach(r => r[key] = options[key]);
     });
   }
 
-
-  filter(callbackfn, thisArg = null) {
+  /*
+  *   Delegate methods
+  * */
+  filter(callbackfn, thisArg) {
     return new Records(this.records.filter(callbackfn, thisArg));
+  }
+
+  forEach(callbackfn, thisArg) {
+    this.records.forEach(callbackfn, thisArg);
   }
 
   count() {
