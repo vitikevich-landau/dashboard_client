@@ -1,6 +1,7 @@
 import {getRows, getRowValue} from "@/utils/dataSet";
 import {Record} from "@/models/Record";
 import {MONTHS} from "@/configs";
+import _ from 'lodash';
 
 export const mergeRecords = (...records) => {
   const merged = new Records();
@@ -13,13 +14,7 @@ export const mergeRecords = (...records) => {
   return merged;
 };
 
-const toObject = (array) =>
-  array.reduce(
-    (acc, v) => {
-      acc[v] = [];
-      return acc;
-    }, {}
-  );
+const toObject = arr => _.zipObject(arr, arr.map(() => []));
 
 export class Records {
   constructor(workSheet, /*options*/) {
@@ -91,11 +86,7 @@ export class Records {
         /*
         *   set not used months undefined
         * */
-        Object.keys(MONTHS)
-          .reduce((acc, k) => {
-            acc[k] = undefined;
-            return acc;
-          }, {}),
+        _.zipObject(_.keys(MONTHS)),
         toObject(
           years[year].map(r => r.date.getMonth())
         )
