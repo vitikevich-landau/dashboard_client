@@ -14,7 +14,6 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    test: null,
     /*
     *   All records
     * */
@@ -28,7 +27,6 @@ export default new Vuex.Store({
     years: [],
   },
   getters: {
-    test: ({test}) => test,
 
     records: ({records}) => records,
     recordsCount: ({records}) => records.length,
@@ -39,10 +37,9 @@ export default new Vuex.Store({
     institutions: ({institutions}) => institutions,
     accountingSections: ({accountingSections}) => accountingSections,
     years: ({years}) => years,
+    lastYear: ({years}) => years[years.length - 1],
   },
   mutations: {
-    setTest: (state, payload) => state.test = payload,
-
     setRecords: (state, payload) => state.records = payload,
 
     setDistricts: (state, payload) => state.districts = payload,
@@ -60,16 +57,18 @@ export default new Vuex.Store({
       const sheetNames = Object.keys(data);
 
       const records = toRecords(data);
-      const years = getYears(records);
+      const years = getYears(records).sort((a, b) => a - b);
+
+      console.log(years);
 
       commit('setAccountingSections', sheetNames);
       commit('setRecords', records);
       commit('setYears', years);
 
 
-      console.log(
-       years
-      )
+      // console.log(
+      //  records.filter(r => r.date.getFullYear() !== 2014)
+      // )
 
       // console.log(
       //   _.chain(allRecords.records)

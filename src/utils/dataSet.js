@@ -64,8 +64,8 @@ export const toRecords = workBookMap =>
     .flatten()
     .value();
 
-export const getYears = recods =>
-  _(recods)
+export const getYears = records =>
+  _(records)
     .map(r => r.date.getFullYear())
     .uniq()
     .value();

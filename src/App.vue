@@ -2,32 +2,41 @@
   <div id="app">
     <!-- Контент разбит на 2 row, т.к. содержимое первого row логически не связано с контентом второго row -->
     <div class="row">
+      <div class="col-2">
+        <label>
+          <select class="custom-select" v-model="selectedYears">
+            <option
+                v-for="year in years" :key="year">{{year}}</option>
+          </select>
+        </label>
+      </div>
       <div class="col-lg-12">
         <ReactiveBarChart
             :chart-data="chartData"
             :options="chartOptions"
             :height="160"
         />
+        <h3>{{selectedYears}}</h3>
       </div>
-<!--      <div class="col-lg-8">-->
-<!--        <ReactiveBarChart :chart-data="chartData" :options="chartOptions"/>-->
-<!--      </div>-->
-<!--      <div class="col-lg-8">-->
-<!--        <ReactiveBarChart :chart-data="chartData" :options="chartOptions"/>-->
-<!--      </div>-->
+      <!--      <div class="col-lg-8">-->
+      <!--        <ReactiveBarChart :chart-data="chartData" :options="chartOptions"/>-->
+      <!--      </div>-->
+      <!--      <div class="col-lg-8">-->
+      <!--        <ReactiveBarChart :chart-data="chartData" :options="chartOptions"/>-->
+      <!--      </div>-->
     </div>
     <br>
   </div>
 </template>
 
 <script>
-  // import {fetchXLSXDataMixin} from "@/mixins/fetchXLSXDataMixin";
 
   // import HelloWorld from '@/charts/HelloWorld.vue'
   import ReactiveBarChart from "@/components/charts/ReactiveBar";
   import store from '@/store';
-  import { mapActions, mapGetters } from 'vuex';
-  import { COLORS, MONTHS } from "@/configs";
+  import {mapActions, mapGetters} from 'vuex';
+  import {COLORS, MONTHS} from "@/configs";
+  import chartOptions from '@/components/charts/options';
 
   export default {
     name: 'App',
@@ -36,42 +45,12 @@
       ReactiveBarChart
     },
     data() {
+      // console.log(this.$store.getters.lastYear);
       return {
         title: "Dashboard App",
         chartData: {},
-        chartOptions: {
-          title: {
-            display: true,
-            text: 'Chart.js Bar Chart - Stacked'
-          },
-          tooltips: {
-            mode: 'index',
-            intersect: false
-          },
-          responsive: true,
-          scales: {
-            xAxes: [{
-              stacked: true,
-            }],
-            yAxes: [{
-              stacked: true,
-              display: false
-            }]
-          },
-          animation: {
-            duration: 350
-          },
-          /*plugins: {
-            datalabels: {
-              color: 'white',
-              textAlign: 'center',
-              font: {
-                weight: "bold",
-                size: 14
-              }
-            }
-          }*/
-        }
+        chartOptions,
+        selectedYears: undefined
       };
     },
     computed: {
@@ -81,8 +60,9 @@
         'records',
         'recordsCount',
         'years',
+        'lastYear',
         'districts',
-      ])
+      ]),
     },
     methods: {
       ...mapActions(['fetchData']),
@@ -118,8 +98,8 @@
       await store.dispatch('fetchData');
 
       this.setupChart();
+      this.selectedYears = this.lastYear;
 
-      // console.log(store.getters.records);
     }
   }
 </script>
