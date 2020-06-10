@@ -1,5 +1,6 @@
 import XLSX from "xlsx";
 import _ from 'lodash';
+// eslint-disable-next-line no-unused-vars
 import { Record } from "@/models/Record";
 
 export const fetchData = url =>
@@ -39,11 +40,12 @@ export const workBookMap = workBook => {
   const sheets = sheetNames.map(v => workBook.Sheets[v]);
   const map = sheets
     .map(r => rows(r, rowValue))
-    .map((r, i) => r
-      .map(
-        s => [...s, sheetNames[i]]
-      )
-      .map(r => new Record(r[0], r[1], r[2], r[3], r[4], r[5]))
+    .map(
+      (r, i) => r
+        .map(
+          s => [...s, sheetNames[i]]
+        )
+      // .map(r => new Record(r[0], r[1], r[2], r[3], r[4], r[5]))
     );
   return _.zipObject(sheetNames, map);
 };
@@ -55,5 +57,10 @@ export const records = workBookMap =>
     *   skip titles
     * */
     .map(r => r.slice(1))
+    .map(
+      r => r.map(
+        v => new Record(v[0], v[1], v[2], v[3], v[4], v[5])
+      )
+    )
     .flatten()
     .value();
