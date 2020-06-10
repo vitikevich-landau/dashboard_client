@@ -11,17 +11,17 @@ export const fetchData = url =>
     })
     .then(ab => XLSX.read(new Uint8Array(ab), {type: "array"}));
 
-export const getNecessarySheetNames = workBook =>
+export const usedSheetNames = workBook =>
   workBook.SheetNames.slice(0, workBook.SheetNames.length - 1);
 
-const getRowNumber = cell => cell.replace(/\D+/g, '');
+const rowNumber = cell => cell.replace(/\D+/g, '');
 
-export const getRowValue = row => row['v'];
-export const getRows = (workSheet, cellMapper = null) => {
+export const rowValue = row => row['v'];
+export const rows = (workSheet, cellMapper = null) => {
   let rows = [], row, n;
 
   _.forEach(workSheet, (v, k) => {
-    n = getRowNumber(k);
+    n = rowNumber(k);
     if (!rows[n]) {
       rows[n] = [];
     }
