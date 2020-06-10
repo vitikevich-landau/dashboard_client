@@ -1,17 +1,20 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {DATA_URL} from "@/configs";
+import { DATA_URL } from "@/configs";
 // eslint-disable-next-line no-unused-vars
-import {fetchData, getNecessarySheetNames, gt} from "@/utils/dataSet";
-import {mergeRecords, Records} from "@/models/Records";
+import { fetchData, usedSheetNames, gt, getRows, getRowValue, toWorkBookMap, toRecords, getYears } from "@/utils/dataSet";
+// eslint-disable-next-line no-unused-vars
+import { mergeRecords, Records } from "@/models/Records";
 
 // eslint-disable-next-line no-unused-vars
 import _ from 'lodash';
+// import { Record } from "@/models/Record";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    test: null,
     /*
     *   All records
     * */
@@ -25,7 +28,10 @@ export default new Vuex.Store({
     years: [],
   },
   getters: {
+    test: ({test}) => test,
+
     records: ({records}) => records,
+    recordsCount: ({records}) => records.length,
     // totalAmountMonths: ({records}) => records,
     // totalAmountYears: ({records}) => records,
 
@@ -35,6 +41,8 @@ export default new Vuex.Store({
     years: ({years}) => years,
   },
   mutations: {
+    setTest: (state, payload) => state.test = payload,
+
     setRecords: (state, payload) => state.records = payload,
 
     setDistricts: (state, payload) => state.districts = payload,
@@ -43,68 +51,45 @@ export default new Vuex.Store({
     setYears: (state, payload) => state.years = payload
   },
   actions: {
+    // eslint-disable-next-line no-unused-vars
     async fetchData({commit,/* state*/}) {
       const workBook = await fetchData(DATA_URL);
 
-      commit('setAccountingSections', getNecessarySheetNames(workBook));
+      // const sheetNames = usedSheetNames(workBook);
+      const data = toWorkBookMap(workBook);
+      const sheetNames = Object.keys(data);
 
-      const [
-        buildingsSheetName,
-        landsSheetName,
-        transportSheetName,
-        updateTimeSheetName
-      ] = workBook.SheetNames;
+      const records = toRecords(data);
+      const years = getYears(records);
 
-      const buildingsSheet = workBook.Sheets[buildingsSheetName];
-      const landsSheet = workBook.Sheets[landsSheetName];
-      const transportSheet = workBook.Sheets[transportSheetName];
-      // eslint-disable-next-line no-unused-vars
-      const updateTimeSheet = workBook.Sheets[updateTimeSheetName];
-
-      // console.log(buildingsSheet, landsSheet, transportSheet, updateTimeSheet);
-
-      /*
-      *   Add sheetName key
-      * */
-      // eslint-disable-next-line no-unused-vars
-      const buildings = new Records(buildingsSheet);
-      buildings.add({accountingSection: buildingsSheetName});
-
-      const transport = new Records(transportSheet);
-      transport.add({accountingSection: transportSheetName});
-
-      // eslint-disable-next-line no-unused-vars
-      const lands = new Records(landsSheet);
-      lands.add({accountingSection: landsSheetName});
-
-      const allRecords = mergeRecords(lands, transport, buildings);
-      commit('setRecords', allRecords);
-
-      const years = allRecords.years();
+      commit('setAccountingSections', sheetNames);
+      commit('setRecords', records);
       commit('setYears', years);
 
-      const districts = allRecords.districtsUniq();
-      commit('setDistricts', districts);
-
-      const institutions = allRecords.institutionUniq();
-      commit('setInstitutions', institutions);
-
-      // console.log(allRecords.filter(r => institutions.includes(r.institution)));
 
       console.log(
-        _.chain(allRecords.records)
-          .filter(r => r.accountingSection === landsSheetName)
-          .groupBy(r => r.institution)
-          .mapValues((rs, k) => [
-              k,
-              rs.reduce((acc, r) => _.round(acc + r.amount, 2), 0),
-              rs.map(r => r.toHumanDate()),
-              rs.map(r => r.amount)
-            ]
-          )
-          .orderBy(r => r[1], ['desc'])
-          .value()
+       years
       )
+
+      // console.log(
+      //   _.chain(allRecords.records)
+      //     .filter(r => r.accountingSection === landsSheetName)
+      //     .groupBy(r => r.institution)
+      //     .mapValues((rs, k) => [
+      //         k,
+      //         rs.reduce((acc, r) => _.round(acc + r.amount, 2), 0),
+      //         rs.map(r => r.toHumanDate()),
+      //         rs.map(r => r.amount)
+      //       ]
+      //     )
+      //     .orderBy(r => r[1], ['desc'])
+      //     .value()
+      // )
+
+      // console.log(lands.groupByMonths());
+
+      // console.log(lands.groupByYears());
+      // console.log(lands.groupByMonths());
 
       // const detalization = _.chain(allRecords.records)
       //   // .filter(r => r.accountingSection === landsSheetName)

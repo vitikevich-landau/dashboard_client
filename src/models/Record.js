@@ -1,14 +1,14 @@
 import XLSX from "xlsx";
 
 export class Record {
-  constructor(district, institution, date, serviceType, amount) {
+  constructor(district, institution, date, serviceType, amount, accountingSection) {
     this.district = district;
     this.institution = institution;
     this.date_value = date;
     this.date = this._toJsDate();
     this.serviceType = serviceType;
     this.amount = amount;
-    this.accountingSection = undefined;
+    this.accountingSection = accountingSection;
   }
 
   toHumanDate() {

@@ -1,16 +1,22 @@
 <template>
   <div id="app">
-    <div class="container">
-      <ReactiveBarChart
-          :chart-data="chartData"
-          :options="chartOptions"
-      />
-<!--      <p v-for="(year, i) in records" :key="i">-->
-<!--        {{ Object.keys(year) }}-->
-<!--      </p>-->
-      <h2>{{ years }}</h2>
-      <h2>{{ districts }}</h2>
+    <!-- Контент разбит на 2 row, т.к. содержимое первого row логически не связано с контентом второго row -->
+    <div class="row">
+      <div class="col-lg-12">
+        <ReactiveBarChart
+            :chart-data="chartData"
+            :options="chartOptions"
+            :height="160"
+        />
+      </div>
+<!--      <div class="col-lg-8">-->
+<!--        <ReactiveBarChart :chart-data="chartData" :options="chartOptions"/>-->
+<!--      </div>-->
+<!--      <div class="col-lg-8">-->
+<!--        <ReactiveBarChart :chart-data="chartData" :options="chartOptions"/>-->
+<!--      </div>-->
     </div>
+    <br>
   </div>
 </template>
 
@@ -53,7 +59,7 @@
             }]
           },
           animation: {
-            duration: 450
+            duration: 350
           },
           /*plugins: {
             datalabels: {
@@ -70,8 +76,10 @@
     },
     computed: {
       ...mapGetters([
+        'test',
         'accountingSections',
         'records',
+        'recordsCount',
         'years',
         'districts',
       ])
@@ -81,6 +89,7 @@
       setupChart() {
         this.chartData = {
           labels: Object.values(MONTHS),
+
           datasets: [
             {
               data: [130, 47, 44, 38, 27, undefined, 0, 39],
@@ -100,21 +109,6 @@
         this.accountingSections.forEach((v, i) =>
           this.chartData.datasets[i].label = v
         );
-
-        /*
-        *   В зависимости от выбранных годов, создаём компоненты
-        *
-        *
-        * */
-
-        // const years = [2011, 2001];
-        //
-        // console.log(
-        //   this.records
-        //     .filter(rs => years.includes(rs.date.getFullYear()))
-        //     .groupByMonths()
-        // );
-
       }
     },
     async mounted() {
@@ -138,10 +132,5 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
-  }
-
-  .container {
-    margin: 0 auto;
-    width: 600px;
   }
 </style>

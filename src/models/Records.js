@@ -1,6 +1,6 @@
-import {getRows, getRowValue} from "@/utils/dataSet";
-import {Record} from "@/models/Record";
-import {MONTHS} from "@/configs";
+import { getRows, getRowValue } from "@/utils/dataSet";
+import { Record } from "@/models/Record";
+import { MONTHS } from "@/configs";
 import _ from 'lodash';
 
 export const mergeRecords = (...records) => {
@@ -71,11 +71,9 @@ export class Records {
   }
 
   groupByYears() {
-    const years = [...new Set(this.records.map(r => r.date.getFullYear()))];
-    const grouped = toObject(years);
-    this.forEach(r => grouped[r.date.getFullYear()].push(r));
-
-    return grouped;
+    return _(this.records)
+      .groupBy(r => r.date.getFullYear())
+      .value();
   }
 
   groupByMonths() {
