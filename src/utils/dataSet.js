@@ -16,13 +16,13 @@ export const fetchData = url =>
 export const usedSheetNames = workBook =>
   workBook.SheetNames.slice(0, workBook.SheetNames.length - 1);
 
-const rowNumber = cell => cell.replace(/\D+/g, '');
+const getRowNumber = cell => cell.replace(/\D+/g, '');
 
-export const rowValue = row => row['v'];
-export const rows = (workSheet, map = null) => {
+export const getRowValue = row => row['v'];
+export const getRows = (workSheet, map = null) => {
   let rows = [], row, n;
   _.forEach(workSheet, (v, k) => {
-    n = rowNumber(k);
+    n = getRowNumber(k);
     if (!rows[n]) {
       rows[n] = [];
     }
@@ -35,22 +35,21 @@ export const rows = (workSheet, map = null) => {
   });
   return _.compact(rows);
 };
-export const workBookMap = workBook => {
+export const toWorkBookMap = workBook => {
   const sheetNames = usedSheetNames(workBook);
   const sheets = sheetNames.map(v => workBook.Sheets[v]);
   const map = sheets
-    .map(r => rows(r, rowValue))
+    .map(r => getRows(r, getRowValue))
     .map(
       (r, i) => r
         .map(
           s => [...s, sheetNames[i]]
         )
-      // .map(r => new Record(r[0], r[1], r[2], r[3], r[4], r[5]))
     );
   return _.zipObject(sheetNames, map);
 };
 
-export const records = workBookMap =>
+export const toRecords = workBookMap =>
   _.chain(workBookMap)
     .values()
     /*
@@ -63,4 +62,10 @@ export const records = workBookMap =>
       )
     )
     .flatten()
+    .value();
+
+export const getYears = recods =>
+  _(recods)
+    .map(r => r.date.getFullYear())
+    .uniq()
     .value();
