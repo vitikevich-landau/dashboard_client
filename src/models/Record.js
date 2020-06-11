@@ -5,10 +5,13 @@ export class Record {
     this.district = district;
     this.institution = institution;
     this.date_value = date;
-    this.date = this._toJsDate();
     this.serviceType = serviceType;
     this.amount = amount;
     this.accountingSection = accountingSection;
+
+    this.date = this._toJsDate();
+    this.year = this.date.getFullYear();
+    this.month = this.date.getMonth();
   }
 
   toHumanDate() {
