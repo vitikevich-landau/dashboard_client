@@ -1,6 +1,7 @@
 import XLSX from "xlsx";
 import _ from 'lodash';
 import { Record } from "@/models/Record";
+import { MONTHS } from "@/configs";
 
 export const fetchData = url =>
   fetch(url)
@@ -71,3 +72,8 @@ export const getDistricts = records => getRecordProps(records, 'district');
 export const getInstitutions = records => getRecordProps(records, 'institution');
 
 export const toRound = n => _.round(n, 2);
+
+export const mergeWithMonths = records =>
+  _.merge(
+    _.zipObject((_.keys(MONTHS))), records
+  );
