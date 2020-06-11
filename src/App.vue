@@ -16,14 +16,8 @@
             :options="chartOptions"
             :height="160"
         />
-        <h3>{{selectedYears}}</h3>
+        <h3>{{recordsCount}}</h3>
       </div>
-      <!--      <div class="col-lg-8">-->
-      <!--        <ReactiveBarChart :chart-data="chartData" :options="chartOptions"/>-->
-      <!--      </div>-->
-      <!--      <div class="col-lg-8">-->
-      <!--        <ReactiveBarChart :chart-data="chartData" :options="chartOptions"/>-->
-      <!--      </div>-->
     </div>
     <br>
   </div>
@@ -55,7 +49,6 @@
     },
     computed: {
       ...mapGetters([
-        'test',
         'accountingSections',
         'records',
         'recordsCount',
@@ -95,10 +88,10 @@
       /*
       *   waiting for download
       * */
-      await store.dispatch('fetchData');
+      await this.fetchData();
 
       this.setupChart();
-      this.selectedYears = this.lastYear;
+      // this.selectedYears = this.lastYear;
 
     }
   }
