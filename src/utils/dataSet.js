@@ -1,6 +1,5 @@
 import XLSX from "xlsx";
 import _ from 'lodash';
-// eslint-disable-next-line no-unused-vars
 import { Record } from "@/models/Record";
 
 export const fetchData = url =>
@@ -40,11 +39,10 @@ export const toWorkBookMap = workBook => {
   const sheets = sheetNames.map(v => workBook.Sheets[v]);
   const map = sheets
     .map(r => getRows(r, getRowValue))
-    .map(
-      (r, i) => r
-        .map(
-          s => [...s, sheetNames[i]]
-        )
+    .map((r, i) => r
+      .map(
+        s => [...s, sheetNames[i]]
+      )
     );
   return _.zipObject(sheetNames, map);
 };
@@ -56,16 +54,20 @@ export const toRecords = workBookMap =>
     *   skip titles
     * */
     .map(r => r.slice(1))
-    .map(
-      r => r.map(
-        v => new Record(v[0], v[1], v[2], v[3], v[4], v[5])
-      )
+    .map(r =>
+      r.map(v => new Record(v[0], v[1], v[2], v[3], v[4], v[5]))
     )
     .flatten()
     .value();
 
-export const getYears = records =>
+export const getRecordProps = (records, name) =>
   _(records)
-    .map(r => r.date.getFullYear())
+    .map(r => r[name])
     .uniq()
     .value();
+
+export const getYears = records => getRecordProps(records, 'year');
+export const getDistricts = records => getRecordProps(records, 'district');
+export const getInstitutions = records => getRecordProps(records, 'institution');
+
+export const toRound = n => _.round(n, 2);
