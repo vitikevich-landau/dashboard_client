@@ -113,13 +113,10 @@ export default new Vuex.Store({
 
       console.log(
         _(_.values(byMonths)[0])
-          .map(row => {
-              if(row) {
-                return row.reduce((acc, rec) => toRound(acc + rec.amount), 0)
-              } else {
-                return undefined
-              }
-            }
+          .map(row =>
+            row
+              ? row.reduce((acc, rec) => toRound(acc + rec.amount), 0)
+              : undefined
           )
           .value()
       );
