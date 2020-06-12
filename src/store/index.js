@@ -1,25 +1,18 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 // eslint-disable-next-line no-unused-vars
-import { DATA_URL, MONTHS } from "@/configs";
+import {DATA_URL} from "@/configs";
 import {
   fetchData,
-  toWorkBookMap,
-  toRecords,
-  // eslint-disable-next-line no-unused-vars
-  getYears,
   getDistricts,
   getInstitutions,
+  getYears, groupBy,
   // eslint-disable-next-line no-unused-vars
-  groupByYearAccountMonth,
-  // eslint-disable-next-line no-unused-vars
-  groupByYear,
-  // eslint-disable-next-line no-unused-vars
-  groupByYearAccount, toRound
+  mergeWithMonths,
+  toRecords,
+  toWorkBookMap
 } from "@/utils/dataSet";
 // eslint-disable-next-line no-unused-vars
-import { mergeRecords, Records } from "@/models/Records";
-
 // eslint-disable-next-line no-unused-vars
 import _ from 'lodash';
 // import { Record } from "@/models/Record";
@@ -106,6 +99,11 @@ export default new Vuex.Store({
         .filter(rec => selectedAccDistricts.includes(rec.district))
         .filter(rec => selectedInstitutions.includes(rec.institution))
         .value();
+
+
+      console.log(
+        groupBy(records, ['serviceType', 'year', 'account'])
+      );
 
 
       /*
