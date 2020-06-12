@@ -34,9 +34,8 @@ export default new Vuex.Store({
 
     records: ({records}) => records,
     // eslint-disable-next-line no-unused-vars
-    recordsCount: (state, getters) => {
-      console.log(getters.records.count());
-      return 111;
+    recordsCount: ({records}) => {
+      return records ? records.count() : 0;
     },
 
     districts: ({districts}) => districts,

@@ -88,7 +88,7 @@
       /*
       *   waiting for download
       * */
-      await this.fetchData();
+      await this.$store.dispatch('fetchData');
 
       this.setupChart();
       // this.selectedYears = this.lastYear;
