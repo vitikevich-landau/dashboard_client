@@ -7,7 +7,15 @@ import {
   toWorkBookMap,
   toRecords,
   // eslint-disable-next-line no-unused-vars
-  getYears, toRound, getDistricts, getInstitutions, mergeWithMonths
+  getYears,
+  getDistricts,
+  getInstitutions,
+  // eslint-disable-next-line no-unused-vars
+  groupByYearAccountMonth,
+  // eslint-disable-next-line no-unused-vars
+  groupByYear,
+  // eslint-disable-next-line no-unused-vars
+  groupByYearAccount, toRound
 } from "@/utils/dataSet";
 // eslint-disable-next-line no-unused-vars
 import { mergeRecords, Records } from "@/models/Records";
@@ -33,21 +41,18 @@ export default new Vuex.Store({
     * */
     districts: [],
     institutions: [],
-    account: [],
+    accounts: [],
     years: [],
   },
   getters: {
 
     records: ({records}) => records,
     recordsCount: ({records}) => records.length,
-    dataIsLoaded: ({dataIsLoaded}) =>dataIsLoaded,
-
-    // totalAmountMonths: ({records}) => records,
-    // totalAmountYears: ({records}) => records,
+    dataIsLoaded: ({dataIsLoaded}) => dataIsLoaded,
 
     districts: ({districts}) => districts,
     institutions: ({institutions}) => institutions,
-    account: ({account}) => account,
+    accounts: ({accounts}) => accounts,
     years: ({years}) => years,
     lastYear: ({years}) => years[years.length - 1],
   },
@@ -57,7 +62,7 @@ export default new Vuex.Store({
 
     setDistricts: (state, payload) => state.districts = payload,
     setInstitutions: (state, payload) => state.institution = payload,
-    setAccount: (state, payload) => state.setAccount = payload,
+    setAccounts: (state, payload) => state.accounts = payload,
     setYears: (state, payload) => state.years = payload
   },
   actions: {
@@ -79,7 +84,7 @@ export default new Vuex.Store({
 
       // console.log(years);
 
-      commit('setAccount', sheetNames);
+      commit('setAccounts', sheetNames);
       commit('setRecords', records);
       commit('setYears', years);
       commit('setDistricts', districts);
@@ -90,12 +95,13 @@ export default new Vuex.Store({
       * */
       // const selectedYears = [2020, 2019, 2017, 2000, 2002];
       const selectedYears = [2018];
-      const selectedAccSections = ["Участки", "Здания"];
+      const selectedAccSections = sheetNames;
       const selectedAccDistricts = ["Горно-Алтайск", "Улаганский", "Усть-Канский", "Усть-Коксинский"];
       const selectedInstitutions = ["ДПИ2", "ДПИ3", "ДПИ4", "УСПН_Город", "УСПН_Кокса", "УСПН_Кош_Агач", "УСПН_Майма", "УСПН_Онгудай"];
 
+      // eslint-disable-next-line no-unused-vars
       const filtered = _(records)
-        .filter(rec => selectedYears.includes(rec.date.getFullYear()))
+        .filter(rec => selectedYears.includes(rec.year))
         .filter(rec => selectedAccSections.includes(rec.account))
         .filter(rec => selectedAccDistricts.includes(rec.district))
         .filter(rec => selectedInstitutions.includes(rec.institution))
@@ -106,29 +112,16 @@ export default new Vuex.Store({
       *   GROUP
       *   group by years -> accountSection -> months
       * */
+      // console.log(groupByYear(filtered));
+      // console.log(groupByYearAccount(filtered));
+      // console.log(groupByYearAccountMonth(filtered))
 
-      const byYear = _.groupBy(filtered, r => r.year);
+      // const grouped = groupByYearAccountMonth(filtered);
 
-      console.log(byYear);
-
-      const byAccount = _(byYear)
-        .mapValues(r => _.groupBy(r, r => r.account))
-        .value();
-
-      console.log(byAccount);
-
-      // const byMonths = _(byYear)
-      //   .mapValues(row =>
-      //     mergeWithMonths(
-      //       _.groupBy(row, rec => rec.month)
-      //     )
-      //   )
-      //   .value();
-      //
-      // /*
-      // *   prepared data
-      // *
-      // * */
+      /*
+      *   prepared data
+      *
+      * */
       // console.log(
       //   _(_.values(byMonths)[0])
       //     .map(row =>
@@ -138,7 +131,6 @@ export default new Vuex.Store({
       //     )
       //     .value()
       // );
-
 
       /*
       *   GROUPINGS
