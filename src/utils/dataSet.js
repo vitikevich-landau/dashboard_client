@@ -77,3 +77,21 @@ export const mergeWithMonths = records =>
   _.merge(
     _.zipObject((_.keys(MONTHS))), records
   );
+
+export const groupByYear = records => _.groupBy(records, r => r.year);
+export const groupByYearAccount = records =>
+  _(groupByYear(records))
+    .mapValues(r =>
+      _.groupBy(r, r => r.account)
+    )
+    .value();
+export const groupByYearAccountMonth = records =>
+  _(groupByYearAccount(records))
+    .mapValues(account =>
+      _.mapValues(account, row =>
+        mergeWithMonths(
+          _.groupBy(row, rec => rec.month)
+        )
+      )
+    )
+    .value();
