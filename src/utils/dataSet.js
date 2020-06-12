@@ -1,7 +1,7 @@
 import XLSX from "xlsx";
 import _ from 'lodash';
-import { Record } from "@/models/Record";
-import { MONTHS } from "@/configs";
+import {Record} from "@/models/Record";
+import {MONTHS} from "@/configs";
 
 export const fetchData = url =>
   fetch(url)
@@ -95,3 +95,24 @@ export const groupByYearAccountMonth = records =>
       )
     )
     .value();
+
+/**
+ *
+ * @param records
+ * @param fields Record fields, [field1 -> field2 -> fieldN]
+ * @returns {*}
+ */
+export const groupBy = (records, fields) => {
+  let i = 0, len = fields.length - 1;
+
+  const recursive = (rcs, i) =>
+    i >= len
+      ? _.groupBy(rcs, r => r[fields[i]])
+      : _
+        .mapValues(
+          _.groupBy(rcs, r => r[fields[i]]),
+          r => recursive(r, i + 1)
+        );
+
+  return recursive(records, i);
+};
