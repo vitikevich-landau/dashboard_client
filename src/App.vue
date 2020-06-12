@@ -93,14 +93,14 @@
           )
           .value();
 
-        console.log(accounts);
+        // console.log(accounts);
 
         const datasets = _(accounts)
           .map()
           .map(row => _.values(row))
           .value();
 
-        console.log(datasets);
+        // console.log(datasets);
 
         /*
         *   need forEach
