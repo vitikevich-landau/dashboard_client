@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <!-- Контент разбит на 2 row, т.к. содержимое первого row логически не связано с контентом второго row -->
-    <div class="row">
+    <!--
+      Need preloader
+    -->
+    <div class="row" v-if="dataIsLoaded">
       <div class="col-2">
         <label>
           <select class="custom-select" v-model="selectedYears">
@@ -16,7 +19,7 @@
             :options="chartOptions"
             :height="160"
         />
-        <h3>{{selectedYears}}</h3>
+        <h3>{{selectedYears}} - {{ recordsCount }}</h3>
       </div>
       <!--      <div class="col-lg-8">-->
       <!--        <ReactiveBarChart :chart-data="chartData" :options="chartOptions"/>-->
@@ -56,9 +59,10 @@
     computed: {
       ...mapGetters([
         'test',
-        'accountingSections',
+        'account',
         'records',
         'recordsCount',
+        'dataIsLoaded',
         'years',
         'lastYear',
         'districts',
@@ -67,6 +71,10 @@
     methods: {
       ...mapActions(['fetchData']),
       setupChart() {
+
+
+
+
         this.chartData = {
           labels: Object.values(MONTHS),
 
@@ -86,7 +94,7 @@
           ],
         };
 
-        this.accountingSections.forEach((v, i) =>
+        this.account.forEach((v, i) =>
           this.chartData.datasets[i].label = v
         );
       }
@@ -95,7 +103,7 @@
       /*
       *   waiting for download
       * */
-      await store.dispatch('fetchData');
+      await this.$store.dispatch('fetchData');
 
       this.setupChart();
       this.selectedYears = this.lastYear;

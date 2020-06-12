@@ -25,32 +25,39 @@ export default new Vuex.Store({
     * */
     records: [],
     /*
+    *   Preloader
+    * */
+    dataIsLoaded: false,
+    /*
     *   filters
     * */
     districts: [],
     institutions: [],
-    accountingSections: [],
+    account: [],
     years: [],
   },
   getters: {
 
     records: ({records}) => records,
     recordsCount: ({records}) => records.length,
+    dataIsLoaded: ({dataIsLoaded}) =>dataIsLoaded,
+
     // totalAmountMonths: ({records}) => records,
     // totalAmountYears: ({records}) => records,
 
     districts: ({districts}) => districts,
     institutions: ({institutions}) => institutions,
-    accountingSections: ({accountingSections}) => accountingSections,
+    account: ({account}) => account,
     years: ({years}) => years,
     lastYear: ({years}) => years[years.length - 1],
   },
   mutations: {
     setRecords: (state, payload) => state.records = payload,
+    setDataIsLoaded: (state, payload) => state.dataIsLoaded = payload,
 
     setDistricts: (state, payload) => state.districts = payload,
     setInstitutions: (state, payload) => state.institution = payload,
-    setAccountingSections: (state, payload) => state.accountingSections = payload,
+    setAccount: (state, payload) => state.setAccount = payload,
     setYears: (state, payload) => state.years = payload
   },
   actions: {
@@ -60,6 +67,9 @@ export default new Vuex.Store({
 
       // const sheetNames = usedSheetNames(workBook);
       const data = toWorkBookMap(workBook);
+      commit('setDataIsLoaded', true);
+
+
       const sheetNames = Object.keys(data);
 
       const records = toRecords(data);
@@ -69,7 +79,7 @@ export default new Vuex.Store({
 
       // console.log(years);
 
-      commit('setAccountingSections', sheetNames);
+      commit('setAccount', sheetNames);
       commit('setRecords', records);
       commit('setYears', years);
       commit('setDistricts', districts);
@@ -86,7 +96,7 @@ export default new Vuex.Store({
 
       const filtered = _(records)
         .filter(rec => selectedYears.includes(rec.date.getFullYear()))
-        .filter(rec => selectedAccSections.includes(rec.accountingSection))
+        .filter(rec => selectedAccSections.includes(rec.account))
         .filter(rec => selectedAccDistricts.includes(rec.district))
         .filter(rec => selectedInstitutions.includes(rec.institution))
         .value();
@@ -94,32 +104,40 @@ export default new Vuex.Store({
 
       /*
       *   GROUP
-      *   group by years -> accountSection
+      *   group by years -> accountSection -> months
       * */
 
       const byYear = _.groupBy(filtered, r => r.year);
-      const byMonths = _(byYear)
-        .mapValues(row =>
-          mergeWithMonths(
-            _.groupBy(row, rec => rec.month)
-          )
-        )
+
+      console.log(byYear);
+
+      const byAccount = _(byYear)
+        .mapValues(r => _.groupBy(r, r => r.account))
         .value();
 
-      /*
-      *   Break Point here prepared data
-      *
-      * */
+      console.log(byAccount);
 
-      console.log(
-        _(_.values(byMonths)[0])
-          .map(row =>
-            row
-              ? row.reduce((acc, rec) => toRound(acc + rec.amount), 0)
-              : undefined
-          )
-          .value()
-      );
+      // const byMonths = _(byYear)
+      //   .mapValues(row =>
+      //     mergeWithMonths(
+      //       _.groupBy(row, rec => rec.month)
+      //     )
+      //   )
+      //   .value();
+      //
+      // /*
+      // *   prepared data
+      // *
+      // * */
+      // console.log(
+      //   _(_.values(byMonths)[0])
+      //     .map(row =>
+      //       row
+      //         ? row.reduce((acc, rec) => toRound(acc + rec.amount), 0)
+      //         : undefined
+      //     )
+      //     .value()
+      // );
 
 
       /*
