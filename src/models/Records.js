@@ -42,6 +42,11 @@ export class Records {
     return _.uniq(this.#records.map(r => r.serviceType));
   }
 
+  /**
+   *
+   * @param fields Record, [field1 -> field2 -> ... fieldN]
+   * @returns {*}
+   */
   groupBy(fields) {
     let i = 0, len = fields.length - 1;
 
