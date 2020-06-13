@@ -99,7 +99,7 @@ export const groupByYearAccountMonth = records =>
 /**
  *
  * @param records
- * @param fields Record fields, [field1 -> field2 -> fieldN]
+ * @param fields, model Record, [field1 -> field2 -> fieldN]
  * @returns {*}
  */
 export const groupBy = (records, fields) => {
