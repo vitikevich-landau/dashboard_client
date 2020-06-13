@@ -1,6 +1,5 @@
 import XLSX from "xlsx";
 import _ from 'lodash';
-import { Record } from "@/models/Record";
 import { MONTHS } from "@/configs";
 
 export const fetchData = url =>
@@ -35,41 +34,18 @@ export const getRows = (workSheet, map = null) => {
   });
   return _.compact(rows);
 };
-export const toWorkBookMap = workBook => {
+
+export const toRecords = workBook => {
   const sheetNames = usedSheetNames(workBook);
   const sheets = sheetNames.map(v => workBook.Sheets[v]);
-  const map = sheets
+  return sheets
     .map(r => getRows(r, getRowValue))
-    .map((r, i) => r
-      .map(
-        s => [...s, sheetNames[i]]
-      )
-    );
-  return _.zipObject(sheetNames, map);
-};
-
-export const toRecords = workBookMap =>
-  _.chain(workBookMap)
-    .values()
-    /*
-    *   skip titles
-    * */
-    .map(r => r.slice(1))
-    .map(r =>
-      r.map(v => new Record(v[0], v[1], v[2], v[3], v[4], v[5]))
+    .map((r, i) =>
+      r.map(s => [...s, sheetNames[i]])
+        .slice(1)
     )
-    .flatten()
-    .value();
-
-export const getRecordProps = (records, name) =>
-  _(records)
-    .map(r => r[name])
-    .uniq()
-    .value();
-
-export const getYears = records => getRecordProps(records, 'year');
-export const getDistricts = records => getRecordProps(records, 'district');
-export const getInstitutions = records => getRecordProps(records, 'institution');
+    .reduce((acc, r) => [...acc, ...r], []);
+};
 
 export const toRound = n => _.round(n, 2);
 
