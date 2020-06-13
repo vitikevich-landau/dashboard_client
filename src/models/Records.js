@@ -1,17 +1,24 @@
-import { toRecords } from "@/utils/dataSet";
 import _ from 'lodash';
 import { Record } from "@/models/Record";
 
 export class Records {
-  #workBook;
-  #raw;
   #records;
 
-  constructor(workBook) {
-    this.#workBook = workBook;
-    this.#raw = toRecords(this.#workBook);
-    this.#records = this.#raw
-      .map(r => new Record(r[0], r[1], r[2], r[3], r[4], r[5]));
+  constructor(recordsArray) {
+    if (recordsArray.some(r => r instanceof Record)) {
+      this.#records = recordsArray;
+    } else {
+      this.#records = recordsArray
+        .map(r => new Record(r[0], r[1], r[2], r[3], r[4], r[5]));
+    }
+
+  }
+
+  /*
+  *   for test
+  * */
+  get records() {
+    return this.#records;
   }
 
   get years() {
@@ -51,7 +58,7 @@ export class Records {
   }
 
   filter(callbackfn, thisArg) {
-    return this.#records.filter(callbackfn, thisArg);
+    return new Records(this.#records.filter(callbackfn, thisArg));
   }
 
   count() {
