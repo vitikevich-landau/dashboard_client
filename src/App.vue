@@ -1,12 +1,13 @@
 <template>
   <div id="app">
     <!-- Контент разбит на 2 row, т.к. содержимое первого row логически не связано с контентом второго row -->
-    <div class="row">
+    <div class="row" v-if="dataIsLoaded">
       <div class="col-2">
         <label>
           <select class="custom-select" v-model="selectedYears">
             <option
-                v-for="year in years" :key="year">{{year}}</option>
+                v-for="year in years" :key="year">{{year}}
+            </option>
           </select>
         </label>
       </div>
@@ -16,7 +17,7 @@
             :options="chartOptions"
             :height="160"
         />
-        <h3>{{recordsCount}}</h3>
+        <h3>{{recordsCount}} - {{ selectedYears }}</h3>
       </div>
     </div>
     <br>
@@ -28,9 +29,12 @@
   // import HelloWorld from '@/charts/HelloWorld.vue'
   import ReactiveBarChart from "@/components/charts/ReactiveBar";
   import store from '@/store';
-  import {mapActions, mapGetters} from 'vuex';
-  import {COLORS, MONTHS} from "@/configs";
+  import { mapActions, mapGetters } from 'vuex';
+  // eslint-disable-next-line no-unused-vars
+  import { COLORS, MONTHS } from "@/configs";
   import chartOptions from '@/components/charts/options';
+  import _ from 'lodash';
+  import { mergeWithMonths, toRound } from "@/utils/dataSet";
 
   export default {
     name: 'App',
@@ -39,50 +43,59 @@
       ReactiveBarChart
     },
     data() {
-      // console.log(this.$store.getters.lastYear);
       return {
         title: "Dashboard App",
-        chartData: {},
         chartOptions,
-        selectedYears: undefined
+        selectedYears: null
       };
     },
     computed: {
       ...mapGetters([
-        'accountingSections',
+        'dataIsLoaded',
+        'accounts',
         'records',
         'recordsCount',
         'years',
         'lastYear',
         'districts',
       ]),
+      filtered() {
+        return this.records
+          .filter(r => r.year === +this.selectedYears)
+      },
+      grouped() {
+        return this.filtered.groupBy(['account', 'month']);
+      },
+      calculated() {
+        const byAccountMonth = this.grouped;
+
+        return _(byAccountMonth)
+          .values()
+          .map(account =>
+            _.map(mergeWithMonths(account), row =>
+              _.reduce(row, (acc, r) => toRound(acc + r.amount), 0)
+            )
+          )
+          .value();
+      },
+      chartData() {
+        const prepared = this.calculated;
+
+        const chartData = {
+          labels: _.values(MONTHS)
+        };
+
+        const colors = _.values(COLORS);
+
+        const datasets = _.map(this.accounts, (a, i) =>
+          ({data: prepared[i], label: a, backgroundColor: colors[i]})
+        ) ;
+
+        return {...chartData, datasets};
+      }
     },
     methods: {
       ...mapActions(['fetchData']),
-      setupChart() {
-        this.chartData = {
-          labels: Object.values(MONTHS),
-
-          datasets: [
-            {
-              data: [130, 47, 44, 38, 27, undefined, 0, 39],
-              backgroundColor: COLORS.blue,
-            },
-            {
-              data: [10, 12, 7, 5, 1],
-              backgroundColor: COLORS.green,
-            },
-            {
-              data: [17, 11, 22, 18, 12],
-              backgroundColor: COLORS.red,
-            }
-          ],
-        };
-
-        this.accountingSections.forEach((v, i) =>
-          this.chartData.datasets[i].label = v
-        );
-      }
     },
     async mounted() {
       /*
@@ -90,9 +103,7 @@
       * */
       await this.$store.dispatch('fetchData');
 
-      this.setupChart();
-      // this.selectedYears = this.lastYear;
-
+      this.selectedYears = this.lastYear;
     }
   }
 </script>
