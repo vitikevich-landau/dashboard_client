@@ -7,7 +7,7 @@ export class Record {
     this.date_value = date;
     this.serviceType = serviceType;
     this.amount = amount;
-    this.accountingSection = accountingSection;
+    this.account = accountingSection;
 
     this.date = this._toJsDate();
     this.year = this.date.getFullYear();
