@@ -14,7 +14,7 @@ export default {
     }],
       yAxes: [{
       stacked: true,
-      display: false
+      display: true
     }]
   },
   animation: {
