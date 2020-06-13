@@ -1,67 +1,43 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-// eslint-disable-next-line no-unused-vars
-import { DATA_URL, MONTHS } from "@/configs";
-import {
-  fetchData,
-  // eslint-disable-next-line no-unused-vars
-  getYears, toRound, getDistricts, getInstitutions, mergeWithMonths
-} from "@/utils/dataSet";
-// eslint-disable-next-line no-unused-vars
+import { DATA_URL } from "@/configs";
+import { fetchData, toRecords } from "@/utils/dataSet";
 import { Records } from "@/models/Records";
-
-// eslint-disable-next-line no-unused-vars
-import _ from 'lodash';
-// import { Record } from "@/models/Record";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    /*
-    *   All records
-    * */
+    dataIsLoaded: false,
     records: null,
-    /*
-    *   filters
-    * */
-    districts: [],
-    institutions: [],
-    accountingSections: [],
-    years: [],
   },
   getters: {
-
+    dataIsLoaded: ({dataIsLoaded}) => dataIsLoaded,
     records: ({records}) => records,
-    // eslint-disable-next-line no-unused-vars
-    recordsCount: ({records}) => {
-      return records ? records.count() : 0;
-    },
+    recordsCount: ({records}) => records.count(),
 
-    districts: ({districts}) => districts,
-    institutions: ({institutions}) => institutions,
-    accountingSections: ({accountingSections}) => accountingSections,
-    years: ({years}) => years,
-    lastYear: ({years}) => years[years.length - 1],
+    /*
+    *   select filters
+    * */
+    districts: ({records}) => records.districts,
+    institutions: ({records}) => records.institutions,
+    accounts: ({records}) => records.accounts,
+    years: ({records}) => records.years,
+    lastYear: (_, {years}) => years[years.length - 1],
   },
   mutations: {
+    setDataIsLoaded: (state, payload) => state.dataIsLoaded = payload,
     setRecords: (state, payload) => state.records = payload,
-
-    setDistricts: (state, payload) => state.districts = payload,
-    setInstitutions: (state, payload) => state.institution = payload,
-    setAccountingSections: (state, payload) => state.accountingSections = payload,
-    setYears: (state, payload) => state.years = payload
   },
   actions: {
-    // eslint-disable-next-line no-unused-vars
-    async fetchData({commit,/* state*/}) {
+    async fetchData({commit}) {
       const workBook = await fetchData(DATA_URL);
+      commit('setDataIsLoaded', true);
 
-      // const sheetNames = usedSheetNames(workBook);
-      const records = new Records(workBook);
+      const recordsArray = toRecords(workBook);
+
+      const records = new Records(recordsArray);
       commit('setRecords', records);
-
-      // console.log(records);
 
     }
   }
