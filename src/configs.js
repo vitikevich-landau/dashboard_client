@@ -1,4 +1,5 @@
 export const DATA_URL = 'http://localhost:3000/downloads';
+// export const DATA_URL = '/data.xlsx';
 
 export const MONTHS = {
   0: 'Январь',
