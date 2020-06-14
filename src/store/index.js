@@ -38,7 +38,6 @@ export default new Vuex.Store({
 
       const records = new Records(recordsArray);
       commit('setRecords', records);
-
     }
   }
 });
