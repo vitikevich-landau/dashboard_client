@@ -17,6 +17,12 @@ export class Records {
   /*
   *   for test
   * */
+  get(ind) {
+    return this.#records[ind];
+  }
+  /*
+  *   for test
+  * */
   get records() {
     return this.#records;
   }
