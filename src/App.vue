@@ -12,7 +12,7 @@
         </label>
       </div>
       <div class="col-lg-12">
-        <ReactiveBarChart
+        <BarChart
             :chart-data="chartData"
             :options="chartOptions"
             :height="160"
@@ -27,12 +27,12 @@
 <script>
 
   // import HelloWorld from '@/charts/HelloWorld.vue'
-  import ReactiveBarChart from "@/components/charts/ReactiveBar";
+  import BarChart from "@/components/charts/Bar/Bar";
   import store from '@/store';
   import { mapActions, mapGetters } from 'vuex';
   // eslint-disable-next-line no-unused-vars
   import { COLORS, MONTHS } from "@/configs";
-  import chartOptions from '@/components/charts/options';
+  import chartOptions from '@/components/charts/Bar/options';
   import _ from 'lodash';
   import { mergeWithMonths, toRound } from "@/utils/dataSet";
 
@@ -40,7 +40,7 @@
     name: 'App',
     store,
     components: {
-      ReactiveBarChart
+      BarChart
     },
     data() {
       return {
