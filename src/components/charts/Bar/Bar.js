@@ -20,6 +20,7 @@ export default {
           intersect: true
         },
         responsive: true,
+        maintainAspectRatio: false,
         scales: {
           xAxes: [{
             stacked: true,
