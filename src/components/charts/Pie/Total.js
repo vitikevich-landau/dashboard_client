@@ -1,12 +1,14 @@
 import {Doughnut, mixins} from "vue-chartjs";
-// import ChartDataLabels from 'chartjs-plugin-datalabels';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+// eslint-disable-next-line no-unused-vars
+import {COLORS} from "@/configs";
 
 const {reactiveProp} = mixins;
 
 export default {
   extends: Doughnut,
   mixins: [reactiveProp],
-  // plugins: [ChartDataLabels],
+  plugins: [ChartDataLabels],
   data() {
     return {
       options: {
@@ -22,6 +24,28 @@ export default {
         },
         animation: {
           duration: 450
+        },
+        plugins: {
+          datalabels: {
+            font: {
+              weight: 'bold'
+            },
+            color: 'black',
+            // align: 'start',
+            // anchor: 'end',
+            rotation: 15,
+            // padding: 20
+            // labels: {
+            //   title: {
+            //     font: {
+            //       weight: 'bold'
+            //     }
+            //   },
+            //   value: {
+            //     color: 'green'
+            //   }
+            // }
+          }
         }
       }
     }

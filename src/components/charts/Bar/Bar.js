@@ -33,16 +33,16 @@ export default {
         animation: {
           duration: 450
         },
-        /*plugins: {
+        plugins: {
           datalabels: {
-            color: 'white',
-            textAlign: 'center',
+            color: '',
+            /*textAlign: 'center',
             font: {
               weight: "bold",
               size: 14
-            }
+            }*/
           }
-        }*/
+        }
       }
     }
   },

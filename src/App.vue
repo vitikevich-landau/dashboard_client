@@ -196,8 +196,15 @@
           datasets: [
             {
               backgroundColor: accounts.map((_, i) => this.colors[i]),
-              data: reducedTotalAmount
-            }
+              data: reducedTotalAmount,
+              // datalabels: {
+              //   labels: {
+              //     title: {
+              //       color: 'green'
+              //     },
+              //   },
+              // }
+            },
           ]
         };
       },
@@ -208,7 +215,7 @@
           .filter(r => this.selectedDistricts.includes(r.district))
           .filter(r => this.selectedInstitutions.includes(r.institution));
 
-        console.log(filtered);
+        // console.log(filtered);
 
         return filtered;
 
