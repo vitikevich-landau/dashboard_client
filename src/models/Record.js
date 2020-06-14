@@ -4,29 +4,26 @@ export class Record {
   constructor(district, institution, date, serviceType, amount, accountingSection) {
     this.district = district;
     this.institution = institution;
-    this.date_value = date;
+    this.dateValue = date;
     this.serviceType = serviceType;
     this.amount = amount;
     this.account = accountingSection;
 
-    this.date = this._toJsDate();
+    this.date = toJSDate(date);
     this.year = this.date.getFullYear();
     this.month = this.date.getMonth();
+
+
+    function toJSDate(dateValue) {
+      const date = XLSX.SSF.parse_date_code(dateValue);
+      return new Date(date.y, date.m - 1, date.d);
+    }
   }
 
   toHumanDate() {
-    return this._toHumanDate(this._toJsDate());
-  }
-
-  _toJsDate() {
-    const date = XLSX.SSF.parse_date_code(this.date_value);
-    return new Date(date.y, date.m - 1, date.d);
-  }
-
-  _toHumanDate(jsDate) {
-    let dd = jsDate.getDate(),
-      mm = jsDate.getMonth() + 1,
-      yyyy = jsDate.getFullYear() % 100;
+    let dd = this.date.getDate(),
+      mm = this.month + 1,
+      yyyy = this.year % 100;
 
     if (dd < 10) {
       dd = '0' + dd;
