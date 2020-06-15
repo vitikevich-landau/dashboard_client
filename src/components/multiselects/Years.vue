@@ -22,7 +22,7 @@
   import {mapGetters, mapMutations} from 'vuex';
 
   export default {
-    name: "Districts",
+    name: "Years",
     store,
     components: {
       Multiselect
