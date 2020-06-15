@@ -14,17 +14,21 @@ export default new Vuex.Store({
     /*
     *   Filters
     * */
-    filterYears: []
+    filterYears: [],
+    filterInstitutions: []
   },
   getters: {
     dataIsLoaded: ({dataIsLoaded}) => dataIsLoaded,
     records: ({records}) => records,
     recordsCount: ({records}) => records.count(),
-    filterYears: ({filterYears}) => filterYears,
 
     /*
-    *   select filters
+    *   Filters
     * */
+    filterYears: ({filterYears}) => filterYears,
+    filterInstitutions: ({filterInstitutions}) => filterInstitutions,
+
+
     districts: ({records}) => records.districts,
     institutions: ({records}) => records.institutions,
     accounts: ({records}) => records.accounts,
@@ -35,7 +39,11 @@ export default new Vuex.Store({
     setDataIsLoaded: (state, payload) => state.dataIsLoaded = payload,
     setRecords: (state, payload) => state.records = payload,
 
+    /*
+    *   Filters
+    * */
     setFilterYears: (state, payload) => state.filterYears = payload,
+    setFilterInstitutions: (state, payload) => state.filterInstitutions = payload,
   },
   actions: {
     async fetchData({commit}) {
