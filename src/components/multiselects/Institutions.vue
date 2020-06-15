@@ -30,7 +30,7 @@
   import {mapGetters, mapMutations} from 'vuex';
 
   export default {
-    name: "Districts",
+    name: "Institutions",
     store,
     components: {
       Multiselect
