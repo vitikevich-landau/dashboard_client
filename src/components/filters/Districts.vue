@@ -1,9 +1,9 @@
 <template>
   <div>
-    <label for="institutions">Учреждения</label>
+    <label for="districts">Район</label>
     <Multiselect
-        id="institutions"
-        :options="VMGroupInstitutions"
+        id="districts"
+        :options="group"
         select-label="Выбрать"
         selected-label="Выбрано"
         deselectLabel="Удалить"
@@ -16,9 +16,9 @@
         selectGroupLabel=""
         deselectGroupLabel=""
         group-label="category"
-        group-values="institutions"
+        group-values="districts"
         placeholder=""
-        v-model="selectedInstitutions"
+        v-model="selectedDistricts"
     />
   </div>
 </template>
@@ -30,25 +30,25 @@
   import {mapGetters, mapMutations} from 'vuex';
 
   export default {
-    name: "Institutions",
+    name: "Districts",
     store,
     components: {
       Multiselect
     },
     computed: {
-      ...mapGetters(['institutions', 'filterInstitutions']),
-      selectedInstitutions: {
-        get() { return this.filterInstitutions; },
-        set(value) { this.$store.commit('setFilterInstitutions', value); }
+      ...mapGetters(['districts', 'filterDistricts']),
+      selectedDistricts: {
+        get() { return this.filterDistricts; },
+        set(value) { this.$store.commit('setFilterDistricts', value); }
       },
-      VMGroupInstitutions() { return [{category: 'Все', institutions: this.institutions}]; },
+      group() { return [{category: 'Все', districts: this.districts}]; },
     },
     methods: {
-      ...mapMutations(['setFilterInstitutions']),
+      ...mapMutations(['setFilterDistricts']),
     },
     mounted() {
 
-      this.selectedInstitutions = this.institutions;
+      this.selectedDistricts = this.districts;
     }
   }
 </script>
