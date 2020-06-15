@@ -6,14 +6,14 @@
       <div class="row col-8">
         <div class="col-md offset-sm-2">
           <!-- Single option for test -->
-          <MultisilectYears/>
+          <FilterYears/>
           <!-- Single option for test -->
         </div>
         <div class="col-sm">
-          <MultisilectInstitutions/>
+          <FilterInstitutions/>
         </div>
         <div class="col-sm">
-          <MultisilectDistricts/>
+          <FilterDistricts/>
         </div>
       </div>
 
@@ -58,9 +58,9 @@
   import _ from 'lodash';
   import {mergeWithMonths, toRound} from "@/utils/dataSet";
 
-  import MultisilectYears from '@/components/filters/Years';
-  import MultisilectInstitutions from '@/components/filters/Institutions';
-  import MultisilectDistricts from '@/components/filters/Districts';
+  import FilterYears from '@/components/filters/Years';
+  import FilterInstitutions from '@/components/filters/Institutions';
+  import FilterDistricts from '@/components/filters/Districts';
 
   export default {
     name: 'App',
@@ -68,9 +68,9 @@
     components: {
       BarChart,
       PieChart,
-      MultisilectYears,
-      MultisilectInstitutions,
-      MultisilectDistricts
+      FilterYears,
+      FilterInstitutions,
+      FilterDistricts
     },
     data() {
       return {
@@ -80,15 +80,13 @@
     computed: {
       ...mapGetters([
         'dataIsLoaded',
-        'accounts',
         'records',
         'recordsCount',
-        'districts',
+
         'filterYears',
         'filterInstitutions',
         'filterDistricts'
       ]),
-
 
       colors: () => _.values(COLORS),
 
