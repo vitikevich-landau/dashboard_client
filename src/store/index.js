@@ -9,12 +9,18 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     dataIsLoaded: false,
-    records: null,
+    records: [],
+
+    /*
+    *   Filters
+    * */
+    filterYears: []
   },
   getters: {
     dataIsLoaded: ({dataIsLoaded}) => dataIsLoaded,
     records: ({records}) => records,
     recordsCount: ({records}) => records.count(),
+    filterYears: ({filterYears}) => filterYears,
 
     /*
     *   select filters
@@ -28,6 +34,8 @@ export default new Vuex.Store({
   mutations: {
     setDataIsLoaded: (state, payload) => state.dataIsLoaded = payload,
     setRecords: (state, payload) => state.records = payload,
+
+    setFilterYears: (state, payload) => state.filterYears = payload,
   },
   actions: {
     async fetchData({commit}) {
