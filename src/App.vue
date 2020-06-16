@@ -108,9 +108,9 @@
           labels: accounts,
           datasets: [
             {
-              borderColor: accounts.map((_, i) => this.chartBorderColors[i]),
-              borderWidth: 1.7,
-              backgroundColor: accounts.map((_, i) => this.chartColors[i]),
+              // borderColor: accounts.map((_, i) => this.chartBorderColors[i]),
+              borderWidth: 0,
+              backgroundColor: accounts.map((_, i) => this.chartBorderColors[i]),
               data: reducedTotalAmount,
               // datalabels: {
               //   labels: {
