@@ -5,18 +5,17 @@
       <!--  Filters -->
       <div class="row col-8">
         <div class="col-md offset-sm-2">
-          <!-- Single option for test -->
-          <FilterYears/>
-          <!-- Single option for test -->
+          <FilterDistricts/>
         </div>
         <div class="col-sm">
           <FilterInstitutions/>
         </div>
         <div class="col-sm">
-          <FilterDistricts/>
+          <!-- Single option for test -->
+          <FilterYears/>
+          <!-- Single option for test -->
         </div>
       </div>
-
       <!--  Filters -->
 
       <div class="row chart-section">
@@ -88,7 +87,8 @@
         'filterDistricts'
       ]),
 
-      colors: () => _.values(COLORS),
+      chartColors: () => _.values(COLORS.chart),
+      chartBorderColors: () => _.values(COLORS.chartBorder),
 
       /*
       *   Total chart
@@ -108,7 +108,9 @@
           labels: accounts,
           datasets: [
             {
-              backgroundColor: accounts.map((_, i) => this.colors[i]),
+              borderColor: accounts.map((_, i) => this.chartBorderColors[i]),
+              borderWidth: 1.7,
+              backgroundColor: accounts.map((_, i) => this.chartColors[i]),
               data: reducedTotalAmount,
               // datalabels: {
               //   labels: {
@@ -166,7 +168,13 @@
         };
 
         const datasets = _.map(accounts, (a, i) =>
-          ({data: amountByMonths[i], label: a, backgroundColor: this.colors[i]})
+          ({
+            data: amountByMonths[i],
+            label: a,
+            borderColor: this.chartBorderColors[i],
+            borderWidth: 1.7,
+            backgroundColor: this.chartColors[i]
+          })
         );
 
         return {...chartData, datasets};

@@ -17,11 +17,23 @@ export const MONTHS = {
 };
 
 export const COLORS = {
-  blue: 'rgb(54, 162, 235)',
-  red: 'rgb(255, 99, 132)',
-  purple: 'rgb(153, 102, 255)',
-  orange: 'rgb(255, 159, 64)',
-  yellow: 'rgb(255, 205, 86)',
-  green: 'rgb(75, 192, 192)',
-  grey: 'rgb(201, 203, 207)'
+  chart: {
+    blue: 'rgb(54, 162, 235, 0.566)',
+    red: 'rgb(255, 99, 132, 0.566)',
+    purple: 'rgb(153, 102, 255, 0.566)',
+    orange: 'rgb(255, 159, 64, 0.566)',
+    yellow: 'rgb(255, 205, 86, 0.566)',
+    green: 'rgb(75, 192, 192, 0.566)',
+    grey: 'rgb(201, 203, 207, 0.566)'
+  },
+  chartBorder: {
+    blue: 'rgb(54, 162, 235)',
+    red: 'rgb(255, 99, 132)',
+    purple: 'rgb(153, 102, 255)',
+    orange: 'rgb(255, 159, 64)',
+    yellow: 'rgb(255, 205, 86)',
+    green: 'rgb(75, 192, 192)',
+    grey: 'rgb(201, 203, 207)'
+  }
+
 };
