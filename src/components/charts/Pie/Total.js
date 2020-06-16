@@ -1,7 +1,6 @@
 import {Doughnut, mixins} from "vue-chartjs";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-// eslint-disable-next-line no-unused-vars
-import {COLORS} from "@/configs";
+import { paddingBetweenPlugin } from "@/components/charts/plugins";
 
 const {reactiveProp} = mixins;
 
@@ -29,7 +28,7 @@ export default {
           datalabels: {
             font: {
               weight: 'bold',
-              size: 14
+              size: 13
             },
             color: 'black',
             // align: 'start',
@@ -65,6 +64,7 @@ export default {
     }
   },
   mounted() {
+    this.addPlugin(paddingBetweenPlugin);
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
     this.renderChart(this.chartData, this.options);
