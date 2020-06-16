@@ -28,12 +28,13 @@ export default {
         plugins: {
           datalabels: {
             font: {
-              weight: 'bold'
+              weight: 'bold',
+              size: 14
             },
             color: 'black',
             // align: 'start',
             // anchor: 'end',
-            rotation: 15,
+            rotation: 10,
             // padding: 20
             // labels: {
             //   title: {
@@ -45,6 +46,19 @@ export default {
             //     color: 'green'
             //   }
             // }
+            formatter(value, context) {
+              const data = context.chart.data.datasets[0].data;
+              const sum = data.reduce((acc, v) => acc + v, 0);
+
+              console.log(context);
+
+              const v = Number((value / sum) * 100).toFixed(2);
+              if (context.dataIndex % 2 === 0) {
+                return `${"\t".repeat(3)}${v}%`;
+              } else {
+                return `${"\n".repeat(2)}${v}%`;
+              }
+            }
           }
         }
       }
