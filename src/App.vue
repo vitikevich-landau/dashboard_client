@@ -109,7 +109,7 @@
           datasets: [
             {
               // borderColor: accounts.map((_, i) => this.chartBorderColors[i]),
-              borderWidth: 0,
+              // borderWidth: 0,
               backgroundColor: accounts.map((_, i) => this.chartBorderColors[i]),
               data: reducedTotalAmount,
               // datalabels: {
