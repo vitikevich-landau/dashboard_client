@@ -1,6 +1,6 @@
 import {Bar, mixins} from "vue-chartjs";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { paddingBetweenPlugin, totalizerPlugin } from "@/components/charts/plugins";
+import { createPaddingBetweenPlugin, totalizerPlugin } from "@/components/charts/plugins";
 
 const {reactiveProp} = mixins;
 
@@ -72,7 +72,7 @@ export default {
   },
   mounted() {
     this.addPlugin(totalizerPlugin);
-    this.addPlugin(paddingBetweenPlugin);
+    this.addPlugin(createPaddingBetweenPlugin(15));
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
     this.renderChart(this.chartData, this.options);
