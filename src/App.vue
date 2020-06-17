@@ -128,8 +128,6 @@
           ]
         );
 
-        console.log(r);
-
         return r;
       },
       chartColors: () => _.values(COLORS.chart),
