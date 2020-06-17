@@ -1,9 +1,11 @@
-export const paddingBetweenPlugin = {
-  beforeInit: function(chart) {
-    chart.legend.afterFit = function() {
-      this.height += 15;
-    };
-  }
+export const createPaddingBetweenPlugin = (addHeight = 0) => {
+ return {
+   beforeInit: function(chart) {
+     chart.legend.afterFit = function() {
+       this.height += addHeight;
+     };
+   }
+ };
 };
 
 export const totalizerPlugin = {
