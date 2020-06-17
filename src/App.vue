@@ -3,23 +3,28 @@
     <div class="container-fluid" v-if="dataIsLoaded">
 
       <!--  Filters -->
-      <div class="row col-8">
-        <div class="col-md offset-sm-2">
+      <div class="row col-11">
+        <div class="col offset-1">
           <FilterDistricts/>
         </div>
-        <div class="col-sm">
+        <div class="col">
           <FilterInstitutions/>
         </div>
-        <div class="col-sm">
+        <div class="col">
           <!-- Single option for test -->
           <FilterYears/>
           <!-- Single option for test -->
+        </div>
+        <div class="col offset-1">
+          <div class="alert font-italic" role="alert">
+            Общий расход: <strong>{{ totalAmount }}</strong>
+          </div>
         </div>
       </div>
       <!--  Filters -->
 
       <div class="row chart-section">
-        <div class="col-lg-9">
+        <div class="col-8">
           <BarChart
               :chart-data="chartData"
           />
@@ -34,10 +39,19 @@
                 :chart-data="chartData"
             />
           </div>-->
-        <div class="col-lg-3">
-          <PieChart
-              :chart-data="pieChartData"
-          />
+        <div class="col-3">
+          <PieChart :chart-data="pieChartData"/>
+        </div>
+        <!--
+          Dynamic ...
+        -->
+        <div class="col-1">
+          <div
+              class="alert font-italic"
+              role="alert"
+              v-for="(v, k) in totalAccountsAmount" :key="k">
+            {{ v[0] }}: <strong>{{ v[1] }}</strong>
+          </div>
         </div>
       </div>
 
@@ -52,10 +66,10 @@
   import BarChart from "@/components/charts/Bar/Bar";
   import PieChart from "@/components/charts/Pie/Total";
   import store from '@/store';
-  import {mapActions, mapGetters} from 'vuex';
-  import {COLORS, MONTHS} from "@/configs";
+  import { mapActions, mapGetters } from 'vuex';
+  import { COLORS, MONTHS } from "@/configs";
   import _ from 'lodash';
-  import {mergeWithMonths, toRound} from "@/utils/dataSet";
+  import { mergeWithMonths, toRound } from "@/utils/dataSet";
 
   import FilterYears from '@/components/filters/Years';
   import FilterInstitutions from '@/components/filters/Institutions';
@@ -86,7 +100,38 @@
         'filterInstitutions',
         'filterDistricts'
       ]),
+      totalAmount() {
+        // console.log(this.calculated.accounts,this.calculated.amountByMonths);
+        return this
+          .calculated
+          .amountByMonths
+          .reduce((acc, v) =>
+            acc + v.reduce((acc, v) => acc + v, 0), 0
+          )
+          .toLocaleString('ru-RU', {
+            style: "currency",
+            currency: "RUB"
+          });
+      },
+      totalAccountsAmount() {
+        // eslint-disable-next-line no-unused-vars
+        const {accounts, amountByMonths} = this.calculated;
 
+        const r = accounts.map((v, i) =>
+          [
+            v, amountByMonths[i].reduce((acc, v) =>
+              acc + v, 0
+            ).toLocaleString('ru-RU', {
+              style: "currency",
+              currency: "RUB"
+            })
+          ]
+        );
+
+        console.log(r);
+
+        return r;
+      },
       chartColors: () => _.values(COLORS.chart),
       chartBorderColors: () => _.values(COLORS.chartBorder),
 
@@ -109,7 +154,7 @@
           datasets: [
             {
               // borderColor: accounts.map((_, i) => this.chartBorderColors[i]),
-              // borderWidth: 0,
+              borderWidth: 1,
               backgroundColor: accounts.map((_, i) => this.chartBorderColors[i]),
               data: reducedTotalAmount,
               // datalabels: {
@@ -202,5 +247,8 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
+  }
+  .container-fluid {
+    min-width: 1280px !important;
   }
 </style>
