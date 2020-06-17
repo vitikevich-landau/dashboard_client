@@ -13,10 +13,10 @@ export default {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        // title: {
-        //   display: true,
-        //   text: 'Общий расход'
-        // },
+        title: {
+          display: true,
+          text: 'Общий расход'
+        },
 
         tooltips: {
           mode: 'dataset',
@@ -51,13 +51,14 @@ export default {
               const sum = data.reduce((acc, v) => acc + v, 0);
 
               const v = Number((value / sum) * 100)
-                .toFixed(2);
+                .toFixed(2)
+                .replace('.', ',') + '%';
 
               if(data.length > 2) {
                 if (context.dataIndex % 2 === 0) {
-                  return `${"\t".repeat(3)}${v}%`;
+                  return `${"\t".repeat(3)}${v}`;
                 } else {
-                  return `${"\n".repeat(2)}${v}%`;
+                  return `${"\n".repeat(2)}${v}`;
                 }
               } else {
                 return v;
