@@ -1,6 +1,7 @@
 import {Doughnut, mixins} from "vue-chartjs";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { paddingBetweenPlugin } from "@/components/charts/plugins";
+// eslint-disable-next-line no-unused-vars
+import { createPaddingBetweenPlugin } from "@/components/charts/plugins";
 
 const {reactiveProp} = mixins;
 
@@ -13,10 +14,10 @@ export default {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        title: {
-          display: true,
-          text: 'Общий расход'
-        },
+        // title: {
+        //   display: true,
+        //   text: 'Общий расход'
+        // },
 
         tooltips: {
           mode: 'dataset',
@@ -70,7 +71,7 @@ export default {
     }
   },
   mounted() {
-    this.addPlugin(paddingBetweenPlugin);
+    this.addPlugin(createPaddingBetweenPlugin(10));
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
     this.renderChart(this.chartData, this.options);
