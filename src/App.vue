@@ -25,7 +25,7 @@
 
       <div class="row chart-section">
         <div class="col-8">
-          <BarChart
+          <DetailChart
               :chart-data="chartData"
           />
         </div>
@@ -40,7 +40,7 @@
             />
           </div>-->
         <div class="col-3">
-          <PieChart :chart-data="pieChartData"/>
+          <TotalChart :chart-data="pieChartData"/>
         </div>
         <!--
           Dynamic ...
@@ -63,8 +63,8 @@
 </template>
 
 <script>
-  import BarChart from "@/components/charts/Detail/Detail";
-  import PieChart from "@/components/charts/Total/Total";
+  import DetailChart from "@/components/charts/Detail/Detail";
+  import TotalChart from "@/components/charts/Total/Total";
   import store from '@/store';
   import { mapActions, mapGetters } from 'vuex';
   import { COLORS, MONTHS } from "@/configs";
@@ -79,8 +79,8 @@
     name: 'App',
     store,
     components: {
-      BarChart,
-      PieChart,
+      DetailChart,
+      TotalChart,
       FilterYears,
       FilterInstitutions,
       FilterDistricts
