@@ -2,10 +2,11 @@
   <div id="app">
     <div class="container-fluid" v-if="dataIsLoaded">
 
-      <!--  Filters -->
-      <div class="row">
 
+      <div class="row">
+        <!--  Filters -->
         <Filters/>
+        <!--  Filters -->
         <div class="col">
           <div class="alert font-italic" role="alert">
             Общий расход: <strong>{{ totalAmount }}</strong>
@@ -13,7 +14,7 @@
         </div>
 
       </div>
-      <!--  Filters -->
+
 
       <div class="row chart-section">
         <div class="col-8">
@@ -48,6 +49,9 @@
       </div>
 
       <h3>{{({[filterYears] : selectedItems.count()})}}</h3>
+    </div>
+    <div class="spinner-border text-success mt-5" role="status" v-else>
+      <span class="sr-only">Loading...</span>
     </div>
     <!-- end -->
     <br>
@@ -107,11 +111,11 @@
         const r = accounts.map((v, i) =>
           [
             v, amountByMonths[i].reduce((acc, v) =>
-              acc + v, 0
-            ).toLocaleString('ru-RU', {
-              style: "currency",
-              currency: "RUB"
-            })
+            acc + v, 0
+          ).toLocaleString('ru-RU', {
+            style: "currency",
+            currency: "RUB"
+          })
           ]
         );
 
@@ -233,6 +237,7 @@
     color: #2c3e50;
     margin-top: 60px;
   }
+
   .container-fluid {
     min-width: 1280px !important;
   }
