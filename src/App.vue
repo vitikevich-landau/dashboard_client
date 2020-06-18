@@ -221,6 +221,14 @@
     },
     async mounted() {
       /*
+      *   hide spinner
+      * */
+      document
+        .querySelector('#spinner')
+        .style
+        .display = 'none';
+
+      /*
       *   waiting for download
       * */
       await this.$store.dispatch('fetchData');
