@@ -1,6 +1,7 @@
 import {Bar, mixins} from "vue-chartjs";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { createPaddingBetweenPlugin, totalizerPlugin } from "@/components/charts/plugins";
+import { toLocalCurrency } from "@/utils/currency";
 
 const {reactiveProp} = mixins;
 
@@ -8,7 +9,6 @@ export default {
   extends: Bar,
   mixins: [reactiveProp],
   plugins: [ChartDataLabels],
-  // props: ["options"],
   data() {
     return {
       options: {
@@ -28,7 +28,15 @@ export default {
         },
         tooltips: {
           mode: 'index',
-          intersect: true
+          intersect: true,
+          callbacks: {
+            label: (tooltipItem, data) => {
+              const  title = data.datasets[tooltipItem.datasetIndex].label;
+              const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+
+              return `${title}: ${toLocalCurrency(value)}`;
+            }
+          }
         },
         responsive: true,
         maintainAspectRatio: false,
@@ -55,10 +63,7 @@ export default {
             formatter: (value, ctx) => {
               const total = ctx.chart.$totalizer.totals[ctx.dataIndex];
 
-              return total.toLocaleString("ru-RU", {
-                style: "currency",
-                currency: "RUB"
-              });
+              return toLocalCurrency(total);
             },
             align: "end",
             anchor: "end",

@@ -1,7 +1,7 @@
 import {Doughnut, mixins} from "vue-chartjs";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-// eslint-disable-next-line no-unused-vars
 import { createPaddingBetweenPlugin } from "@/components/charts/plugins";
+import { toLocalCurrency } from "@/utils/currency";
 
 const {reactiveProp} = mixins;
 
@@ -21,7 +21,16 @@ export default {
 
         tooltips: {
           mode: 'dataset',
-          intersect: true
+          intersect: true,
+          callbacks: {
+            label: (tooltipItem, data) => {
+              const title = data.labels[tooltipItem.index];
+              const value = data.datasets[tooltipItem.datasetIndex]
+                .data[tooltipItem.index];
+
+              return `${title}: ${toLocalCurrency(value)}`;
+            }
+          }
         },
         animation: {
           duration: 450
@@ -33,20 +42,7 @@ export default {
               size: 13
             },
             color: 'black',
-            // align: 'end',
-            // anchor: 'end',
             rotation: 5,
-            // padding: -10,
-            // labels: {
-            //   title: {
-            //     font: {
-            //       weight: 'bold'
-            //     }
-            //   },
-            //   value: {
-            //     color: 'green'
-            //   }
-            // }
             formatter(value, context) {
               const data = context.chart.data.datasets[0].data;
               const sum = data.reduce((acc, v) => acc + v, 0);
@@ -72,8 +68,7 @@ export default {
   },
   mounted() {
     this.addPlugin(createPaddingBetweenPlugin(10));
-    // this.chartData is created in the mixin.
-    // If you want to pass options please create a local options object
+
     this.renderChart(this.chartData, this.options);
   }
 };
