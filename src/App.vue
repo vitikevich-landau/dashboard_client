@@ -246,6 +246,6 @@
   }
 
   .container-fluid {
-    min-width: 1280px !important;
+    min-width: 1366px !important;
   }
 </style>
