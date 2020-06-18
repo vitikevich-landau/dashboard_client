@@ -3,30 +3,22 @@
     <div class="container-fluid" v-if="dataIsLoaded">
 
       <!--  Filters -->
-      <div class="row col-11">
-        <div class="col offset-1">
-          <FilterDistricts/>
-        </div>
+      <div class="row">
+
+        <Filters/>
         <div class="col">
-          <FilterInstitutions/>
-        </div>
-        <div class="col">
-          <!-- Single option for test -->
-          <FilterYears/>
-          <!-- Single option for test -->
-        </div>
-        <div class="col offset-1">
           <div class="alert font-italic" role="alert">
             Общий расход: <strong>{{ totalAmount }}</strong>
           </div>
         </div>
+
       </div>
       <!--  Filters -->
 
       <div class="row chart-section">
         <div class="col-8">
           <DetailChart
-              :chart-data="chartData"
+              :chart-data="detailChartData"
           />
         </div>
         <!--<div class="col-lg-4">
@@ -40,7 +32,7 @@
             />
           </div>-->
         <div class="col-3">
-          <TotalChart :chart-data="pieChartData"/>
+          <TotalChart :chart-data="totalChartData"/>
         </div>
         <!--
           Dynamic ...
@@ -55,7 +47,7 @@
         </div>
       </div>
 
-      <h3>{{({[filterYears] : filtered.count()})}}</h3>
+      <h3>{{({[filterYears] : selectedItems.count()})}}</h3>
     </div>
     <!-- end -->
     <br>
@@ -71,9 +63,7 @@
   import _ from 'lodash';
   import { mergeWithMonths, toRound } from "@/utils/dataSet";
 
-  import FilterYears from '@/components/filters/Years';
-  import FilterInstitutions from '@/components/filters/Institutions';
-  import FilterDistricts from '@/components/filters/Districts';
+  import Filters from '@/components/filters/Container';
 
   export default {
     name: 'App',
@@ -81,9 +71,7 @@
     components: {
       DetailChart,
       TotalChart,
-      FilterYears,
-      FilterInstitutions,
-      FilterDistricts
+      Filters
     },
     data() {
       return {
@@ -101,9 +89,8 @@
         'filterDistricts'
       ]),
       totalAmount() {
-        // console.log(this.calculated.accounts,this.calculated.amountByMonths);
         return this
-          .calculated
+          .accountsMonthsAmount
           .amountByMonths
           .reduce((acc, v) =>
             acc + v.reduce((acc, v) => acc + v, 0), 0
@@ -115,7 +102,7 @@
       },
       totalAccountsAmount() {
         // eslint-disable-next-line no-unused-vars
-        const {accounts, amountByMonths} = this.calculated;
+        const {accounts, amountByMonths} = this.accountsMonthsAmount;
 
         const r = accounts.map((v, i) =>
           [
@@ -136,8 +123,8 @@
       /*
       *   Total chart
       * */
-      pieChartData() {
-        const groupByAccount = this.filtered.groupBy(['account']);
+      totalChartData() {
+        const groupByAccount = this.selectedItems.groupBy(['account']);
         const reducedTotalAmount = _.values(groupByAccount)
           .map(row => _.reduce(row, (acc, rec) =>
               toRound(acc + rec.amount), 0
@@ -167,7 +154,7 @@
         };
       },
 
-      filtered() {
+      selectedItems() {
         const filtered = this.records
           .filter(r => +this.filterYears === r.year)
           .filter(r => this.filterInstitutions.includes(r.institution))
@@ -184,11 +171,11 @@
         //   * */
         //   .filter(r => +this.filterYears === r.year);
       },
-      groupedByAccMonth() {
-        return this.filtered.groupBy(['account', 'month']);
+      byAccountsMonths() {
+        return this.selectedItems.groupBy(['account', 'month']);
       },
-      calculated() {
-        const grouped = this.groupedByAccMonth;
+      accountsMonthsAmount() {
+        const grouped = this.byAccountsMonths;
 
         const amountByMonths = _(grouped)
           .values()
@@ -203,8 +190,8 @@
 
         return {accounts, amountByMonths};
       },
-      chartData() {
-        const {accounts, amountByMonths} = this.calculated;
+      detailChartData() {
+        const {accounts, amountByMonths} = this.accountsMonthsAmount;
 
         const chartData = {
           labels: _.values(MONTHS),
