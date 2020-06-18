@@ -221,12 +221,11 @@
     },
     async mounted() {
       /*
-      *   hide spinner
+      *   remove spinner
       * */
       document
         .querySelector('#spinner')
-        .style
-        .display = 'none';
+        .remove();
 
       /*
       *   waiting for download
