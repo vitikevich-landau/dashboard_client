@@ -1,17 +1,56 @@
-import {Bar, mixins} from "vue-chartjs";
+import { Bar, mixins } from "vue-chartjs";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { createPaddingBetweenPlugin, totalizerPlugin } from "@/components/charts/plugins";
 import { toLocalCurrency } from "@/utils/currency";
 
 const {reactiveProp} = mixins;
 
+import store from '@/store/index';
+
 export default {
   extends: Bar,
   mixins: [reactiveProp],
   plugins: [ChartDataLabels],
+  components: {
+    store
+  },
   data() {
     return {
       options: {
+        legend: {
+          onClick(e, legendItem) {
+            // eslint-disable-next-line no-unused-vars
+            const accounts = store.getters.filterAccounts;
+            const filtered = accounts.filter(acc => acc !== legendItem.text);
+            // console.log(filtered);
+
+            const index = legendItem.datasetIndex;
+            const ci = this.chart;
+            const meta = ci.getDatasetMeta(index);
+            // eslint-disable-next-line no-unused-vars
+            const text = legendItem.text;
+
+            // console.log('meta.hidden === null');
+            // console.log(ci.data.datasets);
+
+
+            if (meta.hidden === null) {
+              store.commit('setFilterAccounts', filtered);
+
+              console.log(index);
+              meta.hidden = !ci.data.datasets[index].hidden;
+            } else {
+              store.commit('setFilterAccounts', [...accounts, text]);
+
+              console.log(index);
+
+              meta.hidden = null;
+            }
+
+            // We hid a dataset ... rerender the chart
+            ci.update();
+          }
+        },
         title: {
           // display: true,
           // text: 'Analytics'
@@ -31,10 +70,10 @@ export default {
           intersect: true,
           callbacks: {
             label: (tooltipItem, data) => {
-              const  title = data.datasets[tooltipItem.datasetIndex].label;
+              const title = data.datasets[tooltipItem.datasetIndex].label;
               const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 
-              return `${title}: ${toLocalCurrency(value)}`;
+              return `${ title }: ${ toLocalCurrency(value) }`;
             }
           }
         },
@@ -67,7 +106,7 @@ export default {
             },
             align: "end",
             anchor: "end",
-            display: function(ctx) {
+            display: function (ctx) {
               return ctx.datasetIndex === ctx.chart.$totalizer.utmost;
             }
           }

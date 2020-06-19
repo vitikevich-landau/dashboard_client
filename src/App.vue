@@ -68,6 +68,7 @@
   import { mergeWithMonths, toRound } from "@/utils/dataSet";
 
   import Filters from '@/components/filters/Container';
+  import { toColor } from "@/utils/colors";
 
   export default {
     name: 'App',
@@ -87,10 +88,12 @@
         'dataIsLoaded',
         'records',
         'recordsCount',
+        'accounts',
 
         'filterYears',
         'filterInstitutions',
-        'filterDistricts'
+        'filterDistricts',
+        'filterAccounts'
       ]),
       totalAmount() {
         return this
@@ -108,7 +111,7 @@
         // eslint-disable-next-line no-unused-vars
         const {accounts, amountByMonths} = this.accountsMonthsAmount;
 
-        const r = accounts.map((v, i) =>
+        return accounts.map((v, i) =>
           [
             v, amountByMonths[i].reduce((acc, v) =>
             acc + v, 0
@@ -118,8 +121,6 @@
           })
           ]
         );
-
-        return r;
       },
       chartColors: () => _.values(COLORS.chart),
       chartBorderColors: () => _.values(COLORS.chartBorder),
@@ -144,7 +145,7 @@
             {
               // borderColor: accounts.map((_, i) => this.chartBorderColors[i]),
               borderWidth: 1,
-              backgroundColor: accounts.map((_, i) => this.chartBorderColors[i]),
+              backgroundColor: accounts.map(v => toColor(v)),
               data: reducedTotalAmount,
               // datalabels: {
               //   labels: {
@@ -157,12 +158,12 @@
           ]
         };
       },
-
       selectedItems() {
         const filtered = this.records
           .filter(r => +this.filterYears === r.year)
           .filter(r => this.filterInstitutions.includes(r.institution))
-          .filter(r => this.filterDistricts.includes(r.district));
+          .filter(r => this.filterDistricts.includes(r.district))
+          .filter(r => this.filterAccounts.includes(r.account));
 
         // console.log(filtered);
 
@@ -195,19 +196,20 @@
         return {accounts, amountByMonths};
       },
       detailChartData() {
+        // eslint-disable-next-line no-unused-vars
         const {accounts, amountByMonths} = this.accountsMonthsAmount;
 
         const chartData = {
           labels: _.values(MONTHS),
         };
 
-        const datasets = _.map(accounts, (a, i) =>
+        const datasets = _.map(this.records.accounts/*accounts*/, (a, i) =>
           ({
-            data: amountByMonths[i],
+            data: amountByMonths[i] || [...Array(12)].map(() => 0),
             label: a,
-            borderColor: this.chartBorderColors[i],
+            borderColor: toColor(a),
             borderWidth: 1.7,
-            backgroundColor: this.chartColors[i]
+            backgroundColor: toColor(a)
           })
         );
 
@@ -216,12 +218,12 @@
     },
     methods: {
       ...mapActions([
-        'fetchData',
+        'fetchData'
       ]),
     },
     async mounted() {
       /*
-      *   remove spinner
+      *   remove spinner before fetching data
       * */
       document
         .querySelector('#spinner')
@@ -231,6 +233,10 @@
       *   waiting for download
       * */
       await this.$store.dispatch('fetchData');
+
+
+      this.$store.commit('setFilterAccounts', this.accounts);
+      // console.log(this.fAccounts);
     }
   }
 </script>
