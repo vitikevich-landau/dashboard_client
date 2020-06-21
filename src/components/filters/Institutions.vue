@@ -19,7 +19,15 @@
         group-values="institutions"
         placeholder=""
         v-model="selectedInstitutions"
-    />
+    >
+      <template slot="selection"
+                slot-scope="{ isOpen }">
+        <span class="multiselect__single"
+              v-if="selectedInstitutions.length === institutions.length && !isOpen">
+          <strong>Все</strong>
+        </span>
+      </template>
+    </Multiselect>
   </div>
 </template>
 

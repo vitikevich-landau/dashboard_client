@@ -19,7 +19,15 @@
         group-values="districts"
         placeholder=""
         v-model="selectedDistricts"
-    />
+    >
+      <template slot="selection"
+                slot-scope="{ isOpen }">
+        <span class="multiselect__single"
+              v-if="selectedDistricts.length === districts.length && !isOpen">
+          <strong>Все</strong>
+        </span>
+      </template>
+    </Multiselect>
   </div>
 </template>
 
