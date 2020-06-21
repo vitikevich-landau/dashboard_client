@@ -1,7 +1,7 @@
-import { Bar, mixins } from "vue-chartjs";
+import {Bar, mixins} from "vue-chartjs";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { createPaddingBetweenPlugin, totalizerPlugin } from "@/components/charts/plugins";
-import { toLocalCurrency } from "@/utils/currency";
+import {createPaddingBetweenPlugin, totalizerPlugin} from "@/components/charts/plugins";
+import {toLocalCurrency} from "@/utils/currency";
 
 const {reactiveProp} = mixins;
 
@@ -17,40 +17,6 @@ export default {
   data() {
     return {
       options: {
-        legend: {
-          onClick(e, legendItem) {
-            // eslint-disable-next-line no-unused-vars
-            const accounts = store.getters.filterAccounts;
-            const filtered = accounts.filter(acc => acc !== legendItem.text);
-            // console.log(filtered);
-
-            const index = legendItem.datasetIndex;
-            const ci = this.chart;
-            const meta = ci.getDatasetMeta(index);
-            // eslint-disable-next-line no-unused-vars
-            const text = legendItem.text;
-
-            // console.log('meta.hidden === null');
-            // console.log(ci.data.datasets);
-
-
-            if (meta.hidden === null) {
-              store.commit('setFilterAccounts', filtered);
-
-              console.log(index);
-              meta.hidden = !ci.data.datasets[index].hidden;
-            } else {
-              store.commit('setFilterAccounts', [...accounts, text]);
-
-              console.log(index);
-
-              meta.hidden = null;
-            }
-
-            // We hid a dataset ... rerender the chart
-            ci.update();
-          }
-        },
         title: {
           // display: true,
           // text: 'Analytics'
@@ -73,7 +39,7 @@ export default {
               const title = data.datasets[tooltipItem.datasetIndex].label;
               const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 
-              return `${ title }: ${ toLocalCurrency(value) }`;
+              return `${title}: ${toLocalCurrency(value)}`;
             }
           }
         },
@@ -117,8 +83,7 @@ export default {
   mounted() {
     this.addPlugin(totalizerPlugin);
     this.addPlugin(createPaddingBetweenPlugin(15));
-    // this.chartData is created in the mixin.
-    // If you want to pass options please create a local options object
+
     this.renderChart(this.chartData, this.options);
   }
 };

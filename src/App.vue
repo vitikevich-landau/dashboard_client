@@ -3,11 +3,11 @@
     <div class="container-fluid" v-if="dataIsLoaded">
 
 
-      <div class="row">
+      <div class="row mb-3">
         <!--  Filters -->
         <Filters/>
         <!--  Filters -->
-        <div class="col">
+        <div class="row offset-1">
           <div class="alert font-italic" role="alert">
             Общий расход: <strong>{{ totalAmount }}</strong>
           </div>
@@ -108,7 +108,6 @@
           });
       },
       totalAccountsAmount() {
-        // eslint-disable-next-line no-unused-vars
         const {accounts, amountByMonths} = this.accountsMonthsAmount;
 
         return accounts.map((v, i) =>
@@ -196,16 +195,15 @@
         return {accounts, amountByMonths};
       },
       detailChartData() {
-        // eslint-disable-next-line no-unused-vars
         const {accounts, amountByMonths} = this.accountsMonthsAmount;
 
         const chartData = {
           labels: _.values(MONTHS),
         };
 
-        const datasets = _.map(this.records.accounts/*accounts*/, (a, i) =>
+        const datasets = _.map(accounts, (a, i) =>
           ({
-            data: amountByMonths[i] || [...Array(12)].map(() => 0),
+            data: amountByMonths[i],
             label: a,
             borderColor: toColor(a),
             borderWidth: 1.7,
