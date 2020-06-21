@@ -1,10 +1,13 @@
 <template>
-  <div class="row col-6 offset-1">
+  <div class="row col-8">
     <div class="col">
       <Districts/>
     </div>
     <div class="col">
       <Institutions/>
+    </div>
+    <div class="col">
+      <Accounts/>
     </div>
     <div class="col">
       <!-- Single option for test -->
@@ -18,12 +21,14 @@
   import Districts from '@/components/filters/Districts';
   import Institutions from '@/components/filters/Institutions';
   import Years from '@/components/filters/Years';
+  import Accounts from '@/components/filters/Accounts'
 
   export default {
     name: "FiltersContainer",
     components: {
       Districts,
       Institutions,
+      Accounts,
       Years
     }
   }
