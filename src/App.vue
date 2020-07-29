@@ -2,7 +2,6 @@
   <div id="app">
     <div class="container-fluid" v-if="dataIsLoaded">
 
-
       <div class="row mb-3">
         <!--  Filters -->
         <Filters/>
@@ -14,7 +13,6 @@
         </div>
 
       </div>
-
 
       <div class="row chart-section">
         <div class="col-8">
@@ -48,7 +46,8 @@
         </div>
       </div>
 
-      <h3>{{({[filterYears] : selectedItems.count()})}}</h3>
+<!--      <h3>{{({[filterYears] : selectedItems.count()})}}</h3>-->
+          <Detalizations/>
     </div>
     <div class="spinner-border text-success mt-5" role="status" v-else>
       <span class="sr-only">Loading...</span>
@@ -61,6 +60,8 @@
 <script>
   import DetailChart from "@/components/charts/Detail/Detail";
   import TotalChart from "@/components/charts/Total/Total";
+  import Detalizations from "@/components/detalizations/Table";
+
   import store from '@/store';
   import { mapActions, mapGetters } from 'vuex';
   import { COLORS, MONTHS } from "@/configs";
@@ -76,7 +77,8 @@
     components: {
       DetailChart,
       TotalChart,
-      Filters
+      Filters,
+      Detalizations
     },
     data() {
       return {
