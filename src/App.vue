@@ -47,7 +47,7 @@
       </div>
 
 <!--      <h3>{{({[filterYears] : selectedItems.count()})}}</h3>-->
-          <Detalizations/>
+          <Detalizations :items="selectedItems"/>
     </div>
     <div class="spinner-border text-success mt-5" role="status" v-else>
       <span class="sr-only">Loading...</span>
