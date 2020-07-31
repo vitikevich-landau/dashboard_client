@@ -1,83 +1,98 @@
 <template>
-  <div class="table-responsive pt-3">
-    <table class="table table-sm">
+  <div class="table-responsive pt-3 detalizations">
+    <table class="table table-sm table-fixed">
       <thead>
       <tr>
-        <th>#</th>
-        <th>Header</th>
-        <th>Header</th>
-        <th>Header</th>
-        <th>Header</th>
+        <th>Учреждение</th>
+        <th>Район</th>
+        <th v-for="acc in filterAccounts" :key="acc">{{ acc }}</th>
+        <th>Всего</th>
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>1,001</td>
-        <td>Lorem</td>
-        <td>ipsum</td>
-        <td>dolor</td>
-        <td>sit</td>
-      </tr>
-      <tr>
-        <td>1,002</td>
-        <td>amet</td>
-        <td>consectetur</td>
-        <td>adipiscing</td>
-        <td>elit</td>
-      </tr>
-      <tr>
-        <td>1,003</td>
-        <td>Integer</td>
-        <td>nec</td>
-        <td>odio</td>
-        <td>Praesent</td>
-      </tr>
-      <tr>
-        <td>1,003</td>
-        <td>libero</td>
-        <td>Sed</td>
-        <td>cursus</td>
-        <td>ante</td>
-      </tr>
-      <tr>
-        <td>1,004</td>
-        <td>dapibus</td>
-        <td>diam</td>
-        <td>Sed</td>
-        <td>nisi</td>
-      </tr>
-      <tr>
-        <td>1,005</td>
-        <td>Nulla</td>
-        <td>quis</td>
-        <td>sem</td>
-        <td>at</td>
-      </tr>
-      <tr>
-        <td>1,006</td>
-        <td>nibh</td>
-        <td>elementum</td>
-        <td>imperdiet</td>
-        <td>Duis</td>
-      </tr>
-      <tr>
-        <td>1,007</td>
-        <td>sagittis</td>
-        <td>ipsum</td>
-        <td>Praesent</td>
-        <td>mauris</td>
+      <tr v-for="v in grouped" :key="v[0]">
+        <td>{{ v[0] }}</td>
+        <td>{{ v[1] }}</td>
+        <td v-for="acc in filterAccounts" :key="acc">
+          {{ amounts(v[2][acc]) | toCurrency }}
+        </td>
+        <td>{{ v[2]['total'] | toCurrency }}</td>
       </tr>
       </tbody>
     </table>
+    <!--    {{ byInstitution }}-->
   </div>
 </template>
 
 <script>
+  import store from '@/store';
+  // eslint-disable-next-line no-unused-vars
+  import _ from 'lodash';
+  import { mapGetters } from 'vuex';
+  import { toLocalCurrency } from "@/utils/currency";
+
   export default {
-    name: "Table"
+    name: "Table",
+    store,
+    props: ['items'],
+    data() {
+      return {};
+    },
+    computed: {
+      ...mapGetters(['filterAccounts']),
+      grouped() {
+        const res = this.items.groupBy(['institution', 'district', 'account']);
+
+        const details = [];
+
+        for (const i in res) {
+          for (const d in res[i]) {
+            // const accs = [];
+            const accs = {total: 0};
+
+            for (const a in res[i][d]) {
+              // console.log(res[i][d][a].map(v => v.amount));
+              // accs.push([a, res[i][d][a].map(v => v.amount)]);
+              let amounts = res[i][d][a].map(v => v.amount);
+              accs[a] = {
+                amounts,
+                total: amounts.reduce((acc, c) => acc + c, 0)
+              };
+              accs.total += amounts.reduce((acc, c) => acc + c, 0);
+            }
+
+            /*
+            *   Break Point Here
+            * */
+
+            // console.log(accs);
+
+            details.push([i, d, accs]);
+
+            // console.log([i, d, accs]);
+          }
+        }
+
+        // console.log(details);
+
+        return details;
+      },
+    },
+    filters: {
+      toCurrency(amount) {
+        return toLocalCurrency(amount);
+      }
+    },
+    methods: {
+      amounts(acc) {
+        return acc ? acc['amounts'].reduce((acc, c) => acc + c, 0) : 0;
+      },
+    }
   }
 </script>
 
 <style scoped>
-
+  .detalizations {
+    height: 350px;
+  }
 </style>
